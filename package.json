@@ -1,0 +1,20 @@
+{
+  "name": "rememberus-nodejsserver",
+  "version": "1.0.0",
+  "description": "Server",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Itay-Talias/RememberUS-NodejsServer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Itay-Talias/RememberUS-NodejsServer/issues"
+  },
+  "homepage": "https://github.com/Itay-Talias/RememberUS-NodejsServer#readme"
+}
