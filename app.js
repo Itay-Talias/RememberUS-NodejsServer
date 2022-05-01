@@ -5,9 +5,8 @@ const port = 3000
 
 const fs = require('fs');
 
-// Helper function
 function base64_encode(file) {
-    return "data:image/gif;base64," + fs.readFileSync(file, 'base64');
+    return fs.readFileSync(file, 'base64');
 }
 
 app.get('/', (req, res) => {
@@ -15,8 +14,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/python', (req, res) => {
-  axios.get('http://localhost:5000',
-  { params: { answer: base64_encode(`${__dirname}/public/di.jpg`) } })
+  axios.post('http://localhost:5000/image',
+  { Base64_image : base64_encode(`${__dirname}/public/di.jpg`) } )
     .then(response => {
       console.log(response.data);
       res.send(response.data);
