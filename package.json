@@ -4,7 +4,7 @@
   "description": "Server",
   "main": "app.js",
   "scripts": {
-    "test": "node app.js",
+    "test": "nodemon app.js",
     "start": "node app.js"
   },
   "repository": {
@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/Itay-Talias/RememberUS-NodejsServer/issues"
   },
-  "homepage": "https://github.com/Itay-Talias/RememberUS-NodejsServer#readme"
+  "homepage": "https://github.com/Itay-Talias/RememberUS-NodejsServer#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "smoothly-request": "^1.1.4"
+  }
 }
