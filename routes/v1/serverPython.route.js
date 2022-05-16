@@ -14,16 +14,15 @@ router.get('/', (req, res) => {
   });
 
 router.get('/send_photo_to_python_server', (req, res) => {
-    axios.post('http://localhost:5000/image',
-    { Base64_image : base64_encode('../../../public/di.jpg') } )
-      .then(response => {
-        console.log(response.data);
-        res.send(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    console.log(path.dirname());
+    // axios.post('http://localhost:5000/image',
+    // { Base64_image : base64_encode('../../../public/di.jpg') } )
+    //   .then(response => {
+    //     console.log(response.data);
+    //     res.send(response.data);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
     res.send("Hello");
   });
 
