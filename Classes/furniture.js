@@ -1,18 +1,32 @@
 "use strict";
 
 class furniture {
-  constructor(Location) {
-    this.location = Location;
+  constructor(LocationOnScreen, ImageInBase64, typeName) {
+    this.location = LocationOnScreen;
+    this.imageInBase64 = ImageInBase64;
+    this.typeName = typeName;
   }
 
   // Getter
   get Location() {
     return this.location;
   }
+  get ImageInBase64() {
+    return this.imageInBase64;
+  }
+  get TypeName() {
+    return this.typeName;
+  }
 
-  // Method
+  // Setters
+  changeImageInBase64(ImageInBase64) {
+    this.imageInBase64 = ImageInBase64;
+  }
   changeLocation(newLocation) {
     this.location = newLocation;
+  }
+  changeTypeName(typeName) {
+    this.typeName = typeName;
   }
 }
 

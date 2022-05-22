@@ -5,81 +5,85 @@ const { MongoClient } = require("mongodb");
 const uriForDatabase =
   "mongodb+srv://omeridan123:!!!!!!!!!1@cluster0.we1ph.mongodb.net/?retryWrites=true&w=majority"; //our uri for connection the cluster
 const client = new MongoClient(uriForDatabase); //our Connection to data base object
-const myMongoDBHelpFuncions = require(`${__dirname}/mongodbFunc`);
 
-//Function for signUpToDataBase
-//1.return Add succssed,id in data base and details of sign up user if signup seccssed(no one in the data base using same userName)
-//2.return add failed if any input for sign up is missing or someone already using that userName
-async function signUpToDataBase(userName, password, email, adress) {
-  await myMongoDBHelpFuncions.ConnectToDataBase(client);
-  const missingInput = myMongoDBHelpFuncions.checkForMissingInputForSignUp(
-    userName,
-    password,
-    email,
-    adress
-  );
-  if (missingInput.Status === "Not missing") {
-    const newUser = await myMongoDBHelpFuncions.addNewUserToDataBase(
-      client,
-      userName,
-      password,
-      email,
-      adress
-    );
-    if (newUser.Status === "Add Succssed") {
-      await myMongoDBHelpFuncions.ClosingConnectionWithDataBase(client);
-      return {
-        Status: newUser.Status,
-        id: newUser._id,
-        userName: userName,
-        password: password,
-        Email: email,
-        Adress: adress,
-      };
-    } else {
-      await myMongoDBHelpFuncions.ClosingConnectionWithDataBase(client);
-      return { Status: newUser.Status, Reason: newUser.Reason };
-    }
-  } else {
-    await myMongoDBHelpFuncions.ClosingConnectionWithDataBase(client);
-    return { Status: "Add Failed", Reason: missingInput.Reason };
+//function for connecting to data base
+async function ConnectToDataBase() {
+  try {
+    console.log("-------------------------------");
+    console.log("Connecting To database...");
+    await client.connect();
+    console.log("Connecting To database succssed");
+    console.log("-------------------------------");
+  } catch (e) {
+    console.log("Error connecting to Data base");
   }
 }
 
-//Function for LogInToDataBase
-//1.return LogIn succssed and userInfo if there is such a user with that userName and password
-//2.return LogIn failed if any input for logIn is missing or there is no such a user that matching that userName and password
-async function logInToDataBase(userName, password) {
-  await myMongoDBHelpFuncions.ConnectToDataBase(client);
-  const missingInput = myMongoDBHelpFuncions.checkForMissingInputForLogin(
-    userName,
-    password
-  );
-  if (missingInput.Status === "Not missing") {
-    const user = await myMongoDBHelpFuncions.bringSignUpUserDocument(
-      client,
-      userName,
-      password
-    );
-    if (user.Status === "Found") {
-      await myMongoDBHelpFuncions.ClosingConnectionWithDataBase(client);
-      return { Stauts: "LogIn succssed", userInfo: user.document };
-    } else {
-      await myMongoDBHelpFuncions.ClosingConnectionWithDataBase(client);
-      return {
-        Status: "LogIn Failed",
-        Reason: "No user with that username and password",
-      };
-    }
-  } else {
-    await myMongoDBHelpFuncions.ClosingConnectionWithDataBase(client);
-    return { Status: "LogIn Failed", Reason: missingInput.Reason };
-  }
+//function that closing the connection with the data base
+async function ClosingConnectionWithDataBase() {
+  console.log("-------------------------------");
+  console.log("Closing connection to Data base...");
+  await client.close();
+  console.log("Connection with Data base closed");
+  console.log("-------------------------------");
+}
+
+async function getExistUserDocumentByUserName(userName) {
+  await ConnectToDataBase();
+
+  const existUserDocument = await client
+    .db("RememberUs-DataBase")
+    .collection("signedUsers")
+    .findOne({ userName: userName });
+
+  await ClosingConnectionWithDataBase();
+  return existUserDocument;
+}
+
+//function that add new valid user to data base
+async function addNewValidUserToDataBaseAndReturnHisNewDocument(
+  firstName,
+  lastName,
+  userName,
+  password,
+  email,
+  adress,
+  gender
+) {
+  await ConnectToDataBase();
+
+  const documentToAdd = {
+    firstName: firstName,
+    lastName: lastName,
+    userName: userName,
+    password: password,
+    email: email,
+    adress: adress,
+    gender: gender,
+  };
+
+  const newAddedUser = await client
+    .db("RememberUs-DataBase")
+    .collection("signedUsers")
+    .insertOne(documentToAdd);
+
+  await ClosingConnectionWithDataBase();
+  return await getExistUserDocumentByUserName(userName);
+}
+
+//function who delete userName document(userName that 100% exist) from dataBase
+async function deleteExistDocumentByUserName(userName) {
+  await ConnectToDataBase();
+  const result = await client
+    .db("RememberUs-DataBase")
+    .collection("signedUsers")
+    .deleteOne({ userName: userName });
+  await ClosingConnectionWithDataBase();
 }
 
 //return all signed users documents as array
 async function getAllsignedUserIntoArray() {
-  await myMongoDBHelpFuncions.ConnectToDataBase(client);
+  await ConnectToDataBase();
 
   const documents = await client
     .db("RememberUs-DataBase")
@@ -87,12 +91,24 @@ async function getAllsignedUserIntoArray() {
     .find({});
 
   const documentsArray = await documents.toArray();
-  await myMongoDBHelpFuncions.ClosingConnectionWithDataBase(client);
+  await ClosingConnectionWithDataBase();
   return documentsArray;
 }
 
+//function that update password for existing user in data base
+async function changePasswordForExistinguser(userName, newPassword) {
+  const updateFields = { password: newPassword };
+
+  const result = await client
+    .db("RememberUs-DataBase") //Name of data base
+    .collection("signedUsers") //name of collection
+    .updateOne({ userName: userName }, { $set: updateFields }); //Document with name=name will update the field updatefields
+}
+
 module.exports = {
-  signUpToDataBase: signUpToDataBase,
-  logInToDataBase: logInToDataBase,
+  addNewValidUserToDataBaseAndReturnHisNewDocument:
+    addNewValidUserToDataBaseAndReturnHisNewDocument,
+  deleteExistDocumentByUserName: deleteExistDocumentByUserName,
+  changePasswordForExistinguser: changePasswordForExistinguser,
   getAllsignedUserIntoArray: getAllsignedUserIntoArray,
 };

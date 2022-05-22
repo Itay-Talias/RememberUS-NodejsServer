@@ -32,3 +32,19 @@ v1Router.post("/SignUp", async (req, res) => {
     )
   );
 });
+
+//when using /api/v1/Delete (must send userName)
+v1Router.post("/Delete", async (req, res) => {
+  res.send(await LogicManager.DeleteDocumentByUserName(req.body.userName));
+});
+
+//when using /api/v1/ChangePassword (must send userName)
+v1Router.post("/ChangePassword", async (req, res) => {
+  res.send(
+    await LogicManager.changePasswordForCertainuserName(
+      req.body.userName,
+      req.body.oldPassword,
+      req.body.newPassword
+    )
+  );
+});
