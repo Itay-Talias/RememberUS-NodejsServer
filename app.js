@@ -10,7 +10,7 @@ const logicManager = require(path.join(__dirname, "/Logic/LogicManager"));
 
 app.listen(port, async () => {
   console.log(`listening on port ${port}`);
-  console.log(`Initializing signedUp user array...`);
+  console.log(`Initializing signedUp user array... `);
   await logicManager.getAllsignedUserIntoArray();
   console.log(`Finish to Initializing signedUp user array...`);
 });
