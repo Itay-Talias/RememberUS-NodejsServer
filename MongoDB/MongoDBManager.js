@@ -41,34 +41,15 @@ async function getExistUserDocumentByUserName(userName) {
 }
 
 //function that add new valid user to data base
-async function addNewValidUserToDataBaseAndReturnHisNewDocument(
-  firstName,
-  lastName,
-  userName,
-  password,
-  email,
-  adress,
-  gender
-) {
+async function addNewPersonToDataBase(personToAdd) {
   await ConnectToDataBase();
-
-  const documentToAdd = {
-    firstName: firstName,
-    lastName: lastName,
-    userName: userName,
-    password: password,
-    email: email,
-    adress: adress,
-    gender: gender,
-  };
 
   const newAddedUser = await client
     .db("RememberUs-DataBase")
     .collection("signedUsers")
-    .insertOne(documentToAdd);
+    .insertOne(personToAdd);
 
   await ClosingConnectionWithDataBase();
-  return await getExistUserDocumentByUserName(userName);
 }
 
 //function who delete userName document(userName that 100% exist) from dataBase
@@ -97,18 +78,58 @@ async function getAllsignedUserIntoArray() {
 
 //function that update password for existing user in data base
 async function changePasswordForExistinguser(userName, newPassword) {
+  await ConnectToDataBase();
+
   const updateFields = { password: newPassword };
 
   const result = await client
     .db("RememberUs-DataBase") //Name of data base
     .collection("signedUsers") //name of collection
     .updateOne({ userName: userName }, { $set: updateFields }); //Document with name=name will update the field updatefields
+
+  await ClosingConnectionWithDataBase();
+}
+
+//function that update forPlanImage for existing user in data base
+async function updateForPlanImageInBase64ForExistingUser(
+  userName,
+  forPlanImageInBase64
+) {
+  await ConnectToDataBase();
+
+  const updateFields = { forPlanImageInBase64: forPlanImageInBase64 };
+
+  const result = await client
+    .db("RememberUs-DataBase") //Name of data base
+    .collection("signedUsers") //name of collection
+    .updateOne({ userName: userName }, { $set: updateFields }); //Document with name=name will update the field updatefields
+
+  await ClosingConnectionWithDataBase();
+}
+
+//function that add Furniture To exist certain User with defult photo
+async function updateCertainFernitureArrayOfPerson(
+  userName,
+  newFurnitureArray
+) {
+  await ConnectToDataBase();
+
+  const updateFields = { furnitureArray: newFurnitureArray };
+
+  const result = await client
+    .db("RememberUs-DataBase") //Name of data base
+    .collection("signedUsers") //name of collection
+    .updateOne({ userName: userName }, { $set: updateFields }); //Document with name=name will update the field updatefields
+
+  await ClosingConnectionWithDataBase();
 }
 
 module.exports = {
-  addNewValidUserToDataBaseAndReturnHisNewDocument:
-    addNewValidUserToDataBaseAndReturnHisNewDocument,
+  addNewPersonToDataBase: addNewPersonToDataBase,
   deleteExistDocumentByUserName: deleteExistDocumentByUserName,
   changePasswordForExistinguser: changePasswordForExistinguser,
   getAllsignedUserIntoArray: getAllsignedUserIntoArray,
+  updateForPlanImageInBase64ForExistingUser:
+    updateForPlanImageInBase64ForExistingUser,
+  updateCertainFernitureArrayOfPerson: updateCertainFernitureArrayOfPerson,
 };

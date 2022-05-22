@@ -1,16 +1,11 @@
 "use strict";
 
 class furniture {
-  constructor(LocationOnScreen, ImageInBase64, typeName) {
-    this.location = LocationOnScreen;
-    this.imageInBase64 = ImageInBase64;
+  constructor(typeName) {
+    this.imageInBase64 = undefined;
     this.typeName = typeName;
   }
-
   // Getter
-  get Location() {
-    return this.location;
-  }
   get ImageInBase64() {
     return this.imageInBase64;
   }
@@ -22,11 +17,13 @@ class furniture {
   changeImageInBase64(ImageInBase64) {
     this.imageInBase64 = ImageInBase64;
   }
-  changeLocation(newLocation) {
-    this.location = newLocation;
-  }
   changeTypeName(typeName) {
     this.typeName = typeName;
+  }
+
+  //Methods
+  addDescriptionPhoto(ImageInBase64) {
+    this.imageInBase64 = ImageInBase64;
   }
 }
 
