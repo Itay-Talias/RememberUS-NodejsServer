@@ -1,5 +1,5 @@
 "use strict";
-const allFurnitureClass = require("./AllFurniture.js");
+const allFurnitureClass = require("./AllFurnitureTypes.js");
 
 class person {
   constructor(

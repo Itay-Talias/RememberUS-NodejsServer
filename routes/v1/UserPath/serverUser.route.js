@@ -2,9 +2,11 @@
 const express = require("express");
 const UserRouter = express.Router();
 module.exports = UserRouter;
+const path = require("path");
+
 
 //Load Logic manager
-const LogicManager = require(path.join(__dirname, "../../Logic/LogicManager"));
+const LogicManager = require(path.join(__dirname, "../../../Logic/LogicManager"));
 
 //when using /api/v1/Login (must send userName and password as parameters)
 UserRouter.post("/Login", async (req, res) => {
