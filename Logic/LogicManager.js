@@ -19,7 +19,7 @@ async function getAllsignedUserIntoArray() {
   let documentsArray = await MongoDBManager.getAllsignedUserIntoArray();
   //Move on the documentsArray and convert into people
   for (const currentDocument of documentsArray) {
-    let newPersonToAdd = new person.person(
+    let newPersonToAdd = new person(
       currentDocument.userName,
       currentDocument.lastName,
       currentDocument.userName,
