@@ -17,15 +17,14 @@ pythonServerRouter.get("/", (req, res) => {
 });
 
 pythonServerRouter.get("/send_photo_to_python_server", (req, res) => {
-  // axios.post('http://localhost:5000/image',
-  // { Base64_image : base64_encode('../../../public/di.jpg') } )
-  //   .then(response => {
-  //     console.log(response.data);
-  //     res.send(response.data);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
-  //when using send and send an object automaticalyy parse to jason
-  res.send("Hello");
+  axios.post('http://localhost:5000/image',
+  { Base64_image : base64_encode('../../../public/di.jpg') } )
+    .then(response => {
+      console.log(response.data);
+      res.send(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  // when using send and send an object automaticalyy parse to jason
 });
