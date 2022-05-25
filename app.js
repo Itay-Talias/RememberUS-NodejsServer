@@ -19,3 +19,7 @@ app.use(express.json());
 
 //when using /api --->going to /api page(apiPath)
 app.use("/api", apiRouter);
+
+app.get("/",(req,res)=>{
+  res.send("Hello");
+});
