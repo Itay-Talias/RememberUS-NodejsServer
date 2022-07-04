@@ -14,11 +14,36 @@ function emailIsValid(email) {
 
 let allSignedUserArray = [];
 
-//-------------------------------------Help Function for allSignedUserArray-------------------------------------\\
+
 
 function printallSignedUserArrayToConsole() {
   for (const currentPerson of allSignedUserArray) {
     console.log(currentPerson);
+    
+async function getAllsignedUserIntoArray() {
+  let documentsArray = await MongoDBManager.getAllsignedUserIntoArray();
+  //Move on the documentsArray and convert into people
+  for (const currentDocument of documentsArray) {
+    let newPersonToAdd = new person(
+      currentDocument.userName,
+      currentDocument.lastName,
+      currentDocument.userName,
+      currentDocument.password,
+      currentDocument.email,
+      currentDocument.adress,
+      currentDocument.gender,
+      currentDocument.forPlanImage,
+      currentDocument._id
+    );
+    if (currentDocument.allFurnitures) {
+      for (const currentFurnitre of currentDocument.allFurnitures) {
+        newPersonToAdd.addNewFurniture(
+          currentFurnitre.Location,
+          currentFurnitre.ImageInBase64,
+          currentFurnitre.typeName
+        );
+      }
+    }
   }
 }
 
