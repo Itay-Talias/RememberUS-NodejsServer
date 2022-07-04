@@ -1,7 +1,8 @@
 "use strict";
 
 class furniture {
-  constructor(typeName) {
+  constructor(typeName, furnitureIndex) {
+    this.furnitureIndex = furnitureIndex;
     this.imageInBase64 = undefined;
     this.typeName = typeName;
   }
@@ -12,6 +13,9 @@ class furniture {
   get TypeName() {
     return this.typeName;
   }
+  get FurnitureIndex() {
+    return this.furnitureIndex;
+  }
 
   // Setters
   changeImageInBase64(ImageInBase64) {
@@ -19,6 +23,9 @@ class furniture {
   }
   changeTypeName(typeName) {
     this.typeName = typeName;
+  }
+  changeFurnitureIndex(newIndex) {
+    this.furnitureIndex = newIndex;
   }
 
   //Methods

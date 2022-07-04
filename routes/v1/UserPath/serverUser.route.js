@@ -11,16 +11,14 @@ const LogicManager = require(path.join(
 ));
 
 //when using /api/v1/User/Login (must send userName and password as parameters)
-UserRouter.post("/Login", async (req, res) => {
-  res.send(
-    await LogicManager.logInToDataBase(req.body.userName, req.body.password)
-  );
+UserRouter.post("/Login", (req, res) => {
+  res.send(LogicManager.Login(req.body.userName, req.body.password));
 });
 
 //when using /api/v1/User/SignUp (must send userName, password, email and adress as parameters)
-UserRouter.post("/SignUp", async (req, res) => {
+UserRouter.post("/SignUp", (req, res) => {
   res.send(
-    await LogicManager.signUpToDataBase(
+    LogicManager.SignUp(
       req.body.firstName,
       req.body.lastName,
       req.body.userName,
@@ -34,13 +32,13 @@ UserRouter.post("/SignUp", async (req, res) => {
 
 //when using /api/v1/User/Delete (must send userName)
 UserRouter.delete("/Delete", async (req, res) => {
-  res.send(await LogicManager.DeletePersonFromDataBase(req.body.userName));
+  res.send(await LogicManager.DeletingAccount(req.body.userName));
 });
 
 //when using /api/v1/User/ChangePassword (must send userName,oldPassword and newPassword)
-UserRouter.post("/ChangePassword", async (req, res) => {
+UserRouter.post("/ChangePassword", (req, res) => {
   res.send(
-    await LogicManager.changePasswordForCertainuserName(
+    LogicManager.ChangePassword(
       req.body.userName,
       req.body.oldPassword,
       req.body.newPassword
@@ -48,13 +46,22 @@ UserRouter.post("/ChangePassword", async (req, res) => {
   );
 });
 
+//when using /api/v1/User/Logout (must send userName)
+UserRouter.post("/Logout", async (req, res) => {
+  res.send(await LogicManager.Logout(req.body.userName));
+});
+
 ////when using /api/v1/User/AddForPlanImage (must send userName and forplanimagebase64)
-UserRouter.post("/AddForPlanImage", async (req, res) => {
+UserRouter.post("/AddNewForPlanImage", (req, res) => {
   res.send(
-    await LogicManager.updateCertainPersonForPlanImage(
-      req.body.userName,
-      req.body.forPlanImageInBase64
-    )
+    LogicManager.addNewForPlan(req.body.userName, req.body.forPlanImageInBase64)
+  );
+});
+
+////when using /api/v1/User/DeleteForPlanByIndex (must send userName and and forPlan Index)
+UserRouter.post("/DeleteForPlanByIndex", (req, res) => {
+  res.send(
+    LogicManager.DeleteForPlanByIndex(req.body.userName, req.body.forPlanIndex)
   );
 });
 

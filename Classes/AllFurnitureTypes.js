@@ -2,8 +2,8 @@
 const furnitureClass = require("./furniture.js");
 
 class sofa extends furnitureClass.furnitureClass {
-  constructor() {
-    super("sofa");
+  constructor(furnitureIndex) {
+    super("sofa", furnitureIndex);
   }
 }
 

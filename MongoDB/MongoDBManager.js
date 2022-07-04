@@ -28,32 +28,8 @@ async function ClosingConnectionWithDataBase() {
   console.log("-------------------------------");
 }
 
-async function getExistUserDocumentByUserName(userName) {
-  await ConnectToDataBase();
-
-  const existUserDocument = await client
-    .db("RememberUs-DataBase")
-    .collection("signedUsers")
-    .findOne({ userName: userName });
-
-  await ClosingConnectionWithDataBase();
-  return existUserDocument;
-}
-
-//function that add new valid user to data base
-async function addNewPersonToDataBase(personToAdd) {
-  await ConnectToDataBase();
-
-  const newAddedUser = await client
-    .db("RememberUs-DataBase")
-    .collection("signedUsers")
-    .insertOne(personToAdd);
-
-  await ClosingConnectionWithDataBase();
-}
-
-//function who delete userName document(userName that 100% exist) from dataBase
-async function deleteExistDocumentByUserName(userName) {
+//Function that delete exist person from DataBase
+async function DeletePersonFromsignedUsersCollection(userName) {
   await ConnectToDataBase();
   const result = await client
     .db("RememberUs-DataBase")
@@ -62,8 +38,8 @@ async function deleteExistDocumentByUserName(userName) {
   await ClosingConnectionWithDataBase();
 }
 
-//return all signed users documents as array
-async function getAllsignedUserIntoArray() {
+//Function that return all documents from signedUser DataBase
+async function GetAllDocumentsFromsignedUsersCollection() {
   await ConnectToDataBase();
 
   const documents = await client
@@ -74,6 +50,66 @@ async function getAllsignedUserIntoArray() {
   const documentsArray = await documents.toArray();
   await ClosingConnectionWithDataBase();
   return documentsArray;
+}
+
+//Function that get person that exist in data base and update to new one
+async function UpdatePersonInDataBase(UpdatedPerson) {
+  await ConnectToDataBase();
+
+  //First delete him from data base
+  const result = await client
+    .db("RememberUs-DataBase")
+    .collection("signedUsers")
+    .deleteOne({ userName: UpdatedPerson.userName });
+
+  //Add the updatedPerson
+  const newAddedUser = await client
+    .db("RememberUs-DataBase")
+    .collection("signedUsers")
+    .insertOne(UpdatedPerson);
+
+  await ClosingConnectionWithDataBase();
+}
+
+//Function that get Newperson that not exist in data base and create new document for him
+async function CreateNewPersonInDataBase(NewPerson) {
+  await ConnectToDataBase();
+
+  //Add the NewPerson
+  const newAddedUser = await client
+    .db("RememberUs-DataBase")
+    .collection("signedUsers")
+    .insertOne(NewPerson);
+
+  await ClosingConnectionWithDataBase();
+}
+
+//Function that get person that not exist in data base and add him to data base
+
+/////////////////////////////////////////////////
+
+//function that add new valid user to data base
+async function addValidPersonToDataBase(personToAdd) {
+  await ConnectToDataBase();
+
+  const newAddedUser = await client
+    .db("RememberUs-DataBase")
+    .collection("signedUsers")
+    .insertOne(personToAdd);
+
+  await ClosingConnectionWithDataBase();
+}
+
+async function getExistUserDocumentByUserName(userName) {
+  await ConnectToDataBase();
+
+  const existUserDocument = await client
+    .db("RememberUs-DataBase")
+    .collection("signedUsers")
+    .findOne({ userName: userName });
+
+  await ClosingConnectionWithDataBase();
+  return existUserDocument;
 }
 
 //function that update password for existing user in data base
@@ -125,11 +161,9 @@ async function updateCertainFernitureArrayOfPerson(
 }
 
 module.exports = {
-  addNewPersonToDataBase: addNewPersonToDataBase,
-  deleteExistDocumentByUserName: deleteExistDocumentByUserName,
-  changePasswordForExistinguser: changePasswordForExistinguser,
-  getAllsignedUserIntoArray: getAllsignedUserIntoArray,
-  updateForPlanImageInBase64ForExistingUser:
-    updateForPlanImageInBase64ForExistingUser,
-  updateCertainFernitureArrayOfPerson: updateCertainFernitureArrayOfPerson,
+  DeletePersonFromsignedUsersCollection: DeletePersonFromsignedUsersCollection,
+  GetAllDocumentsFromsignedUsersCollection:
+    GetAllDocumentsFromsignedUsersCollection,
+  UpdatePersonInDataBase: UpdatePersonInDataBase,
+  CreateNewPersonInDataBase: CreateNewPersonInDataBase,
 };

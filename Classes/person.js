@@ -1,52 +1,17 @@
 "use strict";
-const allFurnitureClass = require("./AllFurnitureTypes.js");
-
-function BuildCertainFurniture(typeName) {
-  let newFurniture;
-  switch (typeName) {
-    case "sofa": {
-      newFurniture = new allFurnitureClass.sofa(typeName);
-      break;
-    }
-    case "bath": {
-      newFurniture = new allFurnitureClass.bath(typeName);
-      break;
-    }
-    case "toilet": {
-      newFurniture = new allFurnitureClass.toilet(typeName);
-      break;
-    }
-    case "television": {
-      newFurniture = new allFurnitureClass.television(typeName);
-      break;
-    }
-    case "fridge": {
-      newFurniture = new allFurnitureClass.fridge(typeName);
-      break;
-    }
-    case "door": {
-      newFurniture = new allFurnitureClass.door(typeName);
-      break;
-    }
-    case "chair": {
-      newFurniture = new allFurnitureClass.chair(typeName);
-      break;
-    }
-    case "table": {
-      newFurniture = new allFurnitureClass.table(typeName);
-      break;
-    }
-    case "carpet": {
-      newFurniture = new allFurnitureClass.carpet(typeName);
-      break;
-    }
-  }
-
-  return newFurniture;
-}
+const forPlanImage = require("./forPlanImage.js");
 
 class person {
-  constructor(firstName, lastName, userName, password, email, adress, gender) {
+  constructor(
+    firstName,
+    lastName,
+    userName,
+    password,
+    email,
+    adress,
+    gender,
+    savedInDataBase = false
+  ) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.userName = userName;
@@ -54,7 +19,8 @@ class person {
     this.email = email;
     this.adress = adress;
     this.gender = gender;
-    this.furnitureArray = [];
+    this.forPlanArray = [];
+    this.savedInDataBase = savedInDataBase;
   }
 
   //Getters
@@ -79,11 +45,11 @@ class person {
   get Gender() {
     return this.gender;
   }
-  get ForPlanImage() {
-    return this.forPlanImage;
+  get ForPlanArray() {
+    return this.forPlanArray;
   }
-  get FurnitureArray() {
-    return this.furnitureArray;
+  get SavedInDataBase() {
+    return this.savedInDataBase;
   }
 
   //Setters
@@ -102,19 +68,44 @@ class person {
   changeAdress(newAdress) {
     this.adress = newAdress;
   }
-  changeFurnitureArray(newArray) {
-    this.furnitureArray = newArray;
+  changeForPlanArray(newArray) {
+    this.forPlanArray = newArray;
+  }
+  changeSavedInDataBase(status) {
+    this.savedInDataBase = status;
   }
 
   //Methods
-  UpdateForPlanImageBase64(ImageInBase64) {
-    this.forPlanImageBase64 = ImageInBase64;
+  AddNewForPlan(forPlanBase64) {
+    let newForPlanToAdd = new forPlanImage(
+      forPlanBase64,
+      this.forPlanArray.length
+    );
+    this.forPlanArray.push(newForPlanToAdd);
   }
 
-  addNewFurniture(typeName, ImageInBase64 = undefined) {
-    let newFurnitureToAdd = BuildCertainFurniture(typeName);
-    newFurnitureToAdd.addDescriptionPhoto(ImageInBase64);
-    this.furnitureArray.push(newFurnitureToAdd);
+  DeleteForPlan(forPlanToDeleteIndex) {
+    if (
+      forPlanToDeleteIndex <= this.forPlanArray.length - 1 &&
+      forPlanToDeleteIndex >= 0
+    ) {
+      for (
+        let currentIndex = forPlanToDeleteIndex + 1;
+        currentIndex < this.forPlanArray.length;
+        currentIndex++
+      ) {
+        this.forPlanArray[currentIndex - 1] = this.forPlanArray[currentIndex];
+        this.forPlanArray[currentIndex - 1].changeforPlanIndex(
+          currentIndex - 1
+        );
+      }
+      //now delete last cell
+      this.forPlanArray.splice(this.forPlanArray.length - 1, 1);
+    }
+  }
+
+  addNewFurniture(forPlanIndex, typeName, ImageInBase64 = undefined) {
+    this.forPlanArray[forPlanIndex].addNewFurniture(typeName, ImageInBase64);
   }
 }
 
