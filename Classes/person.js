@@ -1,5 +1,5 @@
 "use strict";
-const allFurnitureClass = require("./AllFurnitureTypes.js");
+const forPlanImage = require("./forPlanImage.js");
 
 class person {
   constructor(
@@ -10,8 +10,7 @@ class person {
     email,
     adress,
     gender,
-    idInDataBase,
-    forPlanImage = "none"
+    savedInDataBase = false
   ) {
     this.firstName = firstName;
     this.lastName = lastName;
@@ -20,9 +19,8 @@ class person {
     this.email = email;
     this.adress = adress;
     this.gender = gender;
-    this.forPlanImage = forPlanImage;
-    this.dataBaseID = idInDataBase;
-    this.furnitureArray = [];
+    this.forPlanArray = [];
+    this.savedInDataBase = savedInDataBase;
   }
 
   //Getters
@@ -47,14 +45,11 @@ class person {
   get Gender() {
     return this.gender;
   }
-  get ForPlanImage() {
-    return this.forPlanImage;
+  get ForPlanArray() {
+    return this.forPlanArray;
   }
-  get IdInDataBase() {
-    return this.idInDataBase;
-  }
-  get FurnitureArray() {
-    return this.furnitureArray;
+  get SavedInDataBase() {
+    return this.savedInDataBase;
   }
 
   //Setters
@@ -73,88 +68,45 @@ class person {
   changeAdress(newAdress) {
     this.adress = newAdress;
   }
+  changeForPlanArray(newArray) {
+    this.forPlanArray = newArray;
+  }
+  changeSavedInDataBase(status) {
+    this.savedInDataBase = status;
+  }
 
   //Methods
-  addNewFurniture(Location, ImageInBase64, typeName) {
-    let newFurnitureToAdd = bringCertainFerniture(
-      Location,
-      ImageInBase64,
-      typeName
+  AddNewForPlan(forPlanBase64) {
+    let newForPlanToAdd = new forPlanImage(
+      forPlanBase64,
+      this.forPlanArray.length
     );
-    this.addNewFurniture.push(newFurnitureToAdd);
+    this.forPlanArray.push(newForPlanToAdd);
   }
-}
 
-function bringCertainFerniture(Location, ImageInBase64, typeName) {
-  let newFurniture;
-  switch (typeName) {
-    case "sofa": {
-      newFurniture = new allFurnitureClass.sofa(
-        Location,
-        ImageInBase64,
-        typeName
-      );
-      break;
-    }
-    case "bath": {
-      newFurniture = new allFurnitureClass.bath(
-        Location,
-        ImageInBase64,
-        typeName
-      );
-      break;
-    }
-    case "toilet": {
-      newFurniture = new allFurnitureClass.toilet(
-        Location,
-        ImageInBase64,
-        typeName
-      );
-      break;
-    }
-    case "television": {
-      newFurniture = new allFurnitureClass.television(
-        Location,
-        ImageInBase64,
-        typeName
-      );
-      break;
-    }
-    case "fridge": {
-      newFurniture = new allFurnitureClass.fridge(
-        Location,
-        ImageInBase64,
-        typeName
-      );
-      break;
-    }
-    case "door": {
-      newFurniture = new allFurnitureClass.door(
-        Location,
-        ImageInBase64,
-        typeName
-      );
-      break;
-    }
-    case "chair": {
-      newFurniture = new allFurnitureClass.chair(
-        Location,
-        ImageInBase64,
-        typeName
-      );
-      break;
-    }
-    case "table": {
-      newFurniture = new allFurnitureClass.table(
-        Location,
-        ImageInBase64,
-        typeName
-      );
-      break;
+  DeleteForPlan(forPlanToDeleteIndex) {
+    if (
+      forPlanToDeleteIndex <= this.forPlanArray.length - 1 &&
+      forPlanToDeleteIndex >= 0
+    ) {
+      for (
+        let currentIndex = forPlanToDeleteIndex + 1;
+        currentIndex < this.forPlanArray.length;
+        currentIndex++
+      ) {
+        this.forPlanArray[currentIndex - 1] = this.forPlanArray[currentIndex];
+        this.forPlanArray[currentIndex - 1].changeforPlanIndex(
+          currentIndex - 1
+        );
+      }
+      //now delete last cell
+      this.forPlanArray.splice(this.forPlanArray.length - 1, 1);
     }
   }
 
-  return newFurniture;
+  addNewFurniture(forPlanIndex, typeName, ImageInBase64 = undefined) {
+    this.forPlanArray[forPlanIndex].addNewFurniture(typeName, ImageInBase64);
+  }
 }
 
 module.exports = person;
