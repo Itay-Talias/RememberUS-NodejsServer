@@ -20,19 +20,4 @@
     margin-right: 1rem;
   }
   
-  .new-expense button:hover,
-  .new-expense button:active {
-    background-color: rgb(109, 103, 103);
-    border-color: rgb(109, 103, 103);
-  }
-  
-  .new-expense button.alternative {
-    color: #220131;
-    border-color: transparent;
-    background-color: transparent;
-  }
-  
-  .new-expense button.alternative:hover,
-  .new-expense button.alternative:active {
-    background-color: #ddb3f8;
-  }
+ 
