@@ -142,7 +142,6 @@ async function updateForPlanImageInBase64ForExistingUser(
 
   await ClosingConnectionWithDataBase();
 }
-
 //function that add Furniture To exist certain User with defult photo
 async function updateCertainFernitureArrayOfPerson(
   userName,
