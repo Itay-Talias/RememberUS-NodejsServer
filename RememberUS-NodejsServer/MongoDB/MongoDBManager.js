@@ -70,7 +70,6 @@ async function UpdatePersonInDataBase(UpdatedPerson) {
 
   await ClosingConnectionWithDataBase();
 }
-
 //Function that get Newperson that not exist in data base and create new document for him
 async function CreateNewPersonInDataBase(NewPerson) {
   await ConnectToDataBase();
@@ -88,7 +87,7 @@ async function CreateNewPersonInDataBase(NewPerson) {
 
 /////////////////////////////////////////////////
 
-//function that add new valid user to data base
+//Function that add new valid user to data base
 async function addValidPersonToDataBase(personToAdd) {
   await ConnectToDataBase();
 
@@ -112,7 +111,7 @@ async function getExistUserDocumentByUserName(userName) {
   return existUserDocument;
 }
 
-//function that update password for existing user in data base
+//Function that update password for existing user in data base
 async function changePasswordForExistinguser(userName, newPassword) {
   await ConnectToDataBase();
 
@@ -120,13 +119,13 @@ async function changePasswordForExistinguser(userName, newPassword) {
 
   const result = await client
     .db("RememberUs-DataBase") //Name of data base
-    .collection("signedUsers") //name of collection
+    .collection("signedUsers") //Name of collection
     .updateOne({ userName: userName }, { $set: updateFields }); //Document with name=name will update the field updatefields
 
   await ClosingConnectionWithDataBase();
 }
 
-//function that update forPlanImage for existing user in data base
+//Function that update forPlanImage for existing user in data base
 async function updateForPlanImageInBase64ForExistingUser(
   userName,
   forPlanImageInBase64
@@ -150,7 +149,6 @@ async function updateCertainFernitureArrayOfPerson(
   await ConnectToDataBase();
 
   const updateFields = { furnitureArray: newFurnitureArray };
-
   const result = await client
     .db("RememberUs-DataBase") //Name of data base
     .collection("signedUsers") //name of collection
