@@ -1,13 +1,12 @@
 import './App.css';
-import LoginWindow from './componets/LoginWindow';
-import StartPage from './componets/StartPage';
+import Login from "./componets/Login";
 
+//let UserConnected;
 
 function App() {
   return (
     <div>
-      <LoginWindow/>
-      <StartPage/>
+      <Login/>
     </div>
   );
 }
