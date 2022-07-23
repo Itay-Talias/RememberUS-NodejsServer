@@ -1,41 +1,45 @@
 import {React,useState} from "react";
 import './Login.css'
+import './background.css'
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Alert from "@mui/material/Alert";
 import logo from "./RememberUs-Logo.png";
+import {Link} from "react-router-dom";
 
 const Login = () =>{
     const [isValidUserName,setIsValidUserName] = useState(true);
     const [isValidPassword,setIsValidPassword] = useState(true);
-    const errorMsg="itay";
+    const [needErrorMsgUserName,setNeedErrorMsgUserName] = useState(false);
+    const [needErrorMsgPassword,setNeedErrorMsgPassword] = useState(false);
     const [enteredUserName, setEnteredUserName] = useState('');
+
     const UserNameChangeHandler = (event) =>{
         if(enteredUserName.trim().length===0){
             setIsValidUserName(true);
+            setNeedErrorMsgUserName(false);
         }
         setEnteredUserName(event.target.value);
-        console.log(enteredUserName);
     };
 
     const [enteredPassword, setEnteredPassword] = useState('');
     const PasswordChangeHandler = (event) =>{
         if(enteredPassword.trim().length===0){
             setIsValidPassword(true);
+            setNeedErrorMsgPassword(false);
         }
         setEnteredPassword(event.target.value);
-        console.log(enteredPassword);
     };
 
     const LoginHandler = (event) =>{
         if(enteredUserName.trim().length===0){
             setIsValidUserName(false);
+            setNeedErrorMsgUserName(true);
         }
         if(enteredPassword.trim().length===0){
             setIsValidPassword(false);
+            setNeedErrorMsgPassword(true);
         }
-        console.log("sdfsdf")
-
     };
 
     return (
@@ -68,11 +72,14 @@ const Login = () =>{
             </div>
             <div className="space"></div>
             <div>
-                <Button variant="contained" >Sign-up</Button>
+                <Link to="/SignUp">
+                    {<Button variant="contained" >Sign-up</Button>}
+                </Link>
                 <Button variant="contained" onClick={LoginHandler}>Log-in</Button>
             </div>
             <div>
-                <Alert severity="error">{errorMsg}</Alert>
+                {needErrorMsgUserName ? <Alert severity="error">The field UserName is empty</Alert>:null}
+                {needErrorMsgPassword ? <Alert severity="error">The field Password is empty</Alert>:null}
             </div>
         </form>
     )
