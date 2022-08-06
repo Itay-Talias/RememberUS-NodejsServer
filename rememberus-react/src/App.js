@@ -1,23 +1,14 @@
+import { Link } from 'react-router-dom';
 import './App.css';
-import Login from "./componets/Login";
-import SignUp from './componets/SignUp';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
-
-//let UserConnected;
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="SignUp" element={<SignUp />}></Route>
-      </Routes>
-    </Router>
-  );
+  return(
+    <div className='FirstBtn'>
+      <Link to="/Login" style={{textDecoration: 'none'}}>
+        {<h2>Let's start</h2>}
+      </Link>
+    </div>
+    );
 }
 
 export default App;

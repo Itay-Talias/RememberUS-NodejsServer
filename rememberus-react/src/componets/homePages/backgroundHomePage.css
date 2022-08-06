@@ -1,29 +1,31 @@
-.Myform {
+.Myform1 {
     background-color: #d6dfde;
     padding: 2rem;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-49%, -49%);
-    width: 30rem;
+    width: 2000px;
+    height: 1000px;
     max-width: 95%;
     border-radius: 30px;
-    text-align: center;
     box-shadow: 50px 50px 50px rgba(5, 5, 5, 0.25);
   }
   
-  .Myform button {
-    font: inherit;
+  .Myform1 button {
+    font:bold;
     cursor: pointer;
-    padding: 0.5rem 2rem;
+    padding: 0.8rem 1rem;
     border: 1px solid #232124;
     background-color: #232124;
     color: white;
     border-radius: 12px;
-    margin-right: 1rem;
   }
 
-  .Logo {
-    padding: 10px;
-    border-radius: 20px;
+  .Logo1 {
+    padding: 0px;
+    height: 100px;
+    width: 200PX;
+    float:right;
   }
+

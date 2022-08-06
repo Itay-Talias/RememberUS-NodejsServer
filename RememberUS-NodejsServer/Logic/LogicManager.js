@@ -19,6 +19,8 @@ let allSignedUserArray = [];
 function printallSignedUserArrayToConsole() {
   for (const currentPerson of allSignedUserArray) {
     console.log(currentPerson);
+  }
+}
     
 async function getAllsignedUserIntoArray() {
   let documentsArray = await MongoDBManager.getAllsignedUserIntoArray();
