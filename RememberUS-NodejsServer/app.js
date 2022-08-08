@@ -1,6 +1,7 @@
 const express = require("express");
 const apiRouter = require(`${__dirname}/routes/apiPath`); //apiRouter= router from apiPage
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
 const port = 4000;
@@ -17,9 +18,10 @@ app.listen(port, async () => {
 
 app.use(express.json());
 
+app.use(cors());
 //when using /api --->going to /api page(apiPath)
 app.use("/api", apiRouter);
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   res.send("Hello");
 });

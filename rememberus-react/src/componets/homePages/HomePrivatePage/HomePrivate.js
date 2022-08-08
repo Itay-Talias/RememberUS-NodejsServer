@@ -7,16 +7,21 @@ import logo from "../../RememberUs-Logo.png";
 import ImageUploading from "react-images-uploading";
 import TitlebarImageList from "./TitlebarImageList";
 
-const HomePrivate = () => {
+const HomePrivate = (props) => {
+  console.log(props.userInfo);
   const [floorPlanImage, setFloorPlanImage] = useState([]);
   const onChangeFoorPlan = (newFloorPlanImage) => {
     setFloorPlanImage(newFloorPlanImage);
   };
-
   return (
     <form className="Myform1">
       <img src={logo} alt="Logo" className="Logo1" />
-      <InfoFloorPlan street={"Tamar 10"} floor={"5"} numberOfRooms={"3"} />
+      <InfoFloorPlan
+        name={`${props.userInfo.firstName} ${props.userInfo.lastName}`}
+        street={props.userInfo.adress}
+        floor={"12"}
+        numberOfRooms={"4"}
+      />
       <div>
         <div style={{ float: "left" }}>
           <ImageUploading

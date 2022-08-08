@@ -6,21 +6,19 @@ import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 import logo from "./RememberUs-Logo.png";
 import { Link, useNavigate } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 
-const Login = () => {
+const Login = (props) => {
   let navigate = useNavigate();
-
   const [isValidUserName, setIsValidUserName] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
-  const [needErrorMsgUserName, setNeedErrorMsgUserName] = useState(false);
-  const [needErrorMsgPassword, setNeedErrorMsgPassword] = useState(false);
+  const [needErrorMsg, setNeedErrorMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const [enteredUserName, setEnteredUserName] = useState("");
   const UserNameChangeHandler = (event) => {
     if (enteredUserName.trim().length === 0) {
       setIsValidUserName(true);
-      setNeedErrorMsgUserName(false);
     }
     setEnteredUserName(event.target.value);
   };
@@ -29,23 +27,37 @@ const Login = () => {
   const PasswordChangeHandler = (event) => {
     if (enteredPassword.trim().length === 0) {
       setIsValidPassword(true);
-      setNeedErrorMsgPassword(false);
     }
     setEnteredPassword(event.target.value);
   };
 
-  const LoginHandler = async (event) => {
+  const LoginHandler = (event) => {
     event.preventDefault();
+    setNeedErrorMsg(false);
     if (enteredUserName.trim().length === 0) {
       setIsValidUserName(false);
-      setNeedErrorMsgUserName(true);
     }
     if (enteredPassword.trim().length === 0) {
       setIsValidPassword(false);
-      setNeedErrorMsgPassword(true);
     }
-    if (enteredUserName === "itay")
-      navigate("../HomePrivate", { replace: true });
+    axios
+      .post(`http://localhost:4000/api/v1/User/Login`, {
+        userName: enteredUserName,
+        password: enteredPassword,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+        if (res.data.Status === "Login succssed") {
+          props.onLoggedUser(res.data.userInfo);
+          navigate("../HomePrivate", {
+            replace: true,
+          });
+        } else {
+          setNeedErrorMsg(true);
+          setErrorMsg(res.data.Reason);
+        }
+      });
   };
 
   return (
@@ -87,12 +99,7 @@ const Login = () => {
         </Button>
       </div>
       <div>
-        {needErrorMsgUserName ? (
-          <Alert severity="error">The field UserName is empty</Alert>
-        ) : null}
-        {needErrorMsgPassword ? (
-          <Alert severity="error">The field Password is empty</Alert>
-        ) : null}
+        {needErrorMsg ? <Alert severity="error">{errorMsg}</Alert> : null}
       </div>
     </form>
   );

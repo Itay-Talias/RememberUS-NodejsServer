@@ -1,0 +1,10 @@
+.FirstBtn {
+    position: absolute;
+    top: 80%;
+    left: 80%;
+    transform: translate(-49%, -49%);
+    size: 20px;
+    text-size-adjust: 50px;
+    color: black;
+  }
+

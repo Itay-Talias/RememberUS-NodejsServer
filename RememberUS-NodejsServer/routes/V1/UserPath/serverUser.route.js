@@ -12,6 +12,8 @@ const LogicManager = require(path.join(
 
 //when using /api/v1/User/Login (must send userName and password as parameters)
 UserRouter.post("/Login", (req, res) => {
+  console.log(req.body.userName);
+  console.log(req.body.password);
   res.send(LogicManager.Login(req.body.userName, req.body.password));
 });
 

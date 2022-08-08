@@ -21,7 +21,7 @@ const TitlebarImageList = () => {
     };
     temp.img = newfurnitureImage[newfurnitureImage.length - 1].img;
     temp.file = newfurnitureImage[newfurnitureImage.length - 1].file;
-    temp.title = "table";
+    temp.title = temp.file.name;
     temp.key = newfurnitureImage[newfurnitureImage.length - 1].img;
     newfurnitureImage.pop();
     newfurnitureImage.push(temp);
@@ -61,7 +61,7 @@ const TitlebarImageList = () => {
               <img
                 src={
                   item.flag
-                    ? require(`../../../img/${item.title}.jpg`)
+                    ? require(`../../../img/${item.title}`)
                     : `${item.img}`
                 }
                 alt={item.title}
