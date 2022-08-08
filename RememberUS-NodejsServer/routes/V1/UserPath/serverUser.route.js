@@ -11,23 +11,22 @@ const LogicManager = require(path.join(
 ));
 
 //when using /api/v1/User/Login (must send userName and password as parameters)
-UserRouter.post("/Login", (req, res) => {
-  console.log(req.body.userName);
-  console.log(req.body.password);
-  res.send(LogicManager.Login(req.body.userName, req.body.password));
+UserRouter.post("/Login", async (req, res) => {
+  res.send(await LogicManager.Login(req.body.userName, req.body.password));
 });
 
 //when using /api/v1/User/SignUp (must send userName, password, email and adress as parameters)
-UserRouter.post("/SignUp", (req, res) => {
+UserRouter.post("/SignUp", async (req, res) => {
   res.send(
-    LogicManager.SignUp(
+    await LogicManager.SignUp(
       req.body.firstName,
       req.body.lastName,
       req.body.userName,
       req.body.password,
       req.body.email,
       req.body.adress,
-      req.body.gender
+      req.body.gender,
+      req.body.personPrivacy
     )
   );
 });
@@ -38,9 +37,9 @@ UserRouter.delete("/Delete", async (req, res) => {
 });
 
 //when using /api/v1/User/ChangePassword (must send userName,oldPassword and newPassword)
-UserRouter.post("/ChangePassword", (req, res) => {
+UserRouter.post("/ChangePassword", async (req, res) => {
   res.send(
-    LogicManager.ChangePassword(
+    await LogicManager.ChangePassword(
       req.body.userName,
       req.body.oldPassword,
       req.body.newPassword
@@ -48,36 +47,84 @@ UserRouter.post("/ChangePassword", (req, res) => {
   );
 });
 
-//when using /api/v1/User/Logout (must send userName)
-UserRouter.post("/Logout", async (req, res) => {
-  res.send(await LogicManager.Logout(req.body.userName));
-});
-
 ////when using /api/v1/User/AddForPlanImage (must send userName and forplanimagebase64)
-UserRouter.post("/AddNewForPlanImage", (req, res) => {
+UserRouter.post("/AddNewForPlanImage", async (req, res) => {
   res.send(
-    LogicManager.addNewForPlan(req.body.userName, req.body.forPlanImageInBase64)
+    await LogicManager.addNewForPlanForExistUser(
+      req.body.userName,
+      req.body.forPlanImageInBase64
+    )
   );
 });
 
 ////when using /api/v1/User/DeleteForPlanByIndex (must send userName and and forPlan Index)
-UserRouter.post("/DeleteForPlanByIndex", (req, res) => {
+UserRouter.post("/DeleteForPlanByIndex", async (req, res) => {
   res.send(
-    LogicManager.DeleteForPlanByIndex(req.body.userName, req.body.forPlanIndex)
+    await LogicManager.DeleteForPlanByIndexForExistUser(
+      req.body.userName,
+      req.body.forPlanIndex
+    )
   );
-});
-
-////when using /api/v1/User/GetUserInfo (must send userName)
-UserRouter.post("/GetUserInfo", async (req, res) => {
-  res.send(LogicManager.getPersonInfoByUserName(req.body.userName));
 });
 
 ////when using /api/v1/User/AddOneFurniture (must send userName,ImageInBase64)
-UserRouter.post("/AddOneFurnitureWithPhoto", async (req, res) => {
+UserRouter.post("/AddOneFurnitureWithoutPhotoManually", async (req, res) => {
   res.send(
-    await LogicManager.AddOneFurnitureByuserNameWithPhoto(
+    await LogicManager.AddNewFurnitureManuallyWithoutPhotoToCertainIndexForPlanForCertainExistUser(
       req.body.userName,
-      req.body.furnitureImageBase64
+      req.body.forPlanIndex,
+      req.body.typeName
     )
   );
+});
+
+UserRouter.post("/AddOneFurnitureWithPhoto", async (req, res) => {
+  res.send(
+    await LogicManager.AddNewFurnitureWithPhotoToCertainIndexForPlanForCertainExistUser(
+      req.body.userName,
+      req.body.forPlanIndex,
+      req.body.ImageInBase64
+    )
+  );
+});
+
+UserRouter.delete(
+  "/DeleteFurnitureByIndexOfCertainFloorPlan",
+  async (req, res) => {
+    res.send(
+      await LogicManager.DeleteFurnitureByIndexOfCertainIndexFloorplanForExistUser(
+        req.body.userName,
+        req.body.forPlanIndex,
+        req.body.furnitureIndex
+      )
+    );
+  }
+);
+
+UserRouter.post(
+  "/ChangeTypeNameOfCertainFurnitureIndexForCertainFloorplanIndexOfExistUser",
+  async (req, res) => {
+    res.send(
+      await LogicManager.ChangeFurnitureTypeByFurnitureIndexAndFloorPlanIndexOfExistUser(
+        req.body.userName,
+        req.body.forPlanIndex,
+        req.body.furnitureIndex,
+        req.body.newTypeName
+      )
+    );
+  }
+);
+
+UserRouter.post("/UpdateDetail", async (req, res) => {
+  res.send(
+    await LogicManager.UpdateExistUserDetail(
+      req.body.userName,
+      req.body.updateField,
+      req.body.updateData
+    )
+  );
+});
+
+UserRouter.post("/GiveAnotherPersonDocumentByHisPrivacy", async (req, res) => {
+  res.send(await LogicManager.getPersonDocumentByHisPrivacy(req.body.userName));
 });

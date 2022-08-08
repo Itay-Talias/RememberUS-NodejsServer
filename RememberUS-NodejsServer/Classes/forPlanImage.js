@@ -1,6 +1,75 @@
 "use strict";
 const allFurnitureClass = require("./allFurnitureTypes.js");
 
+class forPlanImage {
+  constructor(forPlanImangeBase64 = undefined, forPlanIndex) {
+    this.forPlanIndex = forPlanIndex;
+    this.forPlanImangeBase64 = forPlanImangeBase64;
+    this.furnitureArray = [];
+  }
+
+  //Getters
+  get ForPlanImangeBase64() {
+    return this.forPlanImangeBase64;
+  }
+  get ForPlanIndex() {
+    return this.forPlanIndex;
+  }
+  get FurnitureArray() {
+    return this.furnitureArray;
+  }
+
+  //Setters
+  changeforPlanImangeBase64(newforPlanImangeBase64) {
+    this.forPlanImangeBase64 = newforPlanImangeBase64;
+  }
+  changeforPlanIndex(newIndex) {
+    this.forPlanIndex = newIndex;
+  }
+  changeFurnitureArray(newArray) {
+    this.furnitureArray = newArray;
+  }
+
+  //Methods
+  addNewFurniture(typeName, ImageInBase64 = undefined) {
+    let newFurnitureToAdd = BuildCertainFurniture(
+      typeName,
+      this.furnitureArray.length
+    );
+    newFurnitureToAdd.addDescriptionPhoto(ImageInBase64);
+    this.furnitureArray.push(newFurnitureToAdd);
+  }
+
+  DeleteFurnitureByIndex(furnitureIndex) {
+    if (
+      furnitureIndex <= this.furnitureArray.length - 1 &&
+      furnitureIndex >= 0
+    ) {
+      this.furnitureArray.splice(furnitureIndex, 1);
+      for (let i = furnitureIndex; i <= this.furnitureArray.length - 1; i++) {
+        this.furnitureArray[i].changeFurnitureIndex(
+          this.furnitureArray[i].FurnitureIndex - 1
+        );
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ChangeFurnitureTypeByIndex(furnitureIndex, newTypeName) {
+    if (
+      furnitureIndex <= this.furnitureArray.length - 1 &&
+      furnitureIndex >= 0
+    ) {
+      this.furnitureArray[furnitureIndex].changeTypeName(newTypeName);
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
 function BuildCertainFurniture(typeName, furnitureIndex) {
   let newFurniture;
   switch (typeName) {
@@ -43,46 +112,6 @@ function BuildCertainFurniture(typeName, furnitureIndex) {
   }
 
   return newFurniture;
-}
-
-class forPlanImage {
-  constructor(forPlanImangeBase64 = undefined, forPlanIndex) {
-    this.forPlanIndex = forPlanIndex;
-    this.forPlanImangeBase64 = forPlanImangeBase64;
-    this.furnitureArray = [];
-  }
-
-  //Getters
-  get ForPlanImangeBase64() {
-    return this.forPlanImangeBase64;
-  }
-  get ForPlanIndex() {
-    return this.forPlanIndex;
-  }
-  get FurnitureArray() {
-    return this.furnitureArray;
-  }
-
-  //Setters
-  changeforPlanImangeBase64(newforPlanImangeBase64) {
-    this.forPlanImangeBase64 = newforPlanImangeBase64;
-  }
-  changeforPlanIndex(newIndex) {
-    this.forPlanIndex = newIndex;
-  }
-  changeFurnitureArray(newArray) {
-    this.furnitureArray = newArray;
-  }
-
-  //Methods
-  addNewFurniture(typeName, ImageInBase64 = undefined) {
-    let newFurnitureToAdd = BuildCertainFurniture(
-      typeName,
-      this.furnitureArray.length
-    );
-    newFurnitureToAdd.addDescriptionPhoto(ImageInBase64);
-    this.furnitureArray.push(newFurnitureToAdd);
-  }
 }
 
 module.exports = forPlanImage;

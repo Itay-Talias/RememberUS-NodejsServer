@@ -1,5 +1,6 @@
 "use strict";
 const forPlanImage = require("./forPlanImage.js");
+const validator = require("validator");
 
 class person {
   constructor(
@@ -10,6 +11,7 @@ class person {
     email,
     adress,
     gender,
+    personPrivacy,
     savedInDataBase = false
   ) {
     this.firstName = firstName;
@@ -21,6 +23,7 @@ class person {
     this.gender = gender;
     this.forPlanArray = [];
     this.savedInDataBase = savedInDataBase;
+    this.personPrivacy = personPrivacy;
   }
 
   //Getters
@@ -51,8 +54,17 @@ class person {
   get SavedInDataBase() {
     return this.savedInDataBase;
   }
+  get PersonPrivacy() {
+    return this.personPrivacy;
+  }
 
   //Setters
+  changeFirstName(newFirstName) {
+    this.firstName = newFirstName;
+  }
+  changeLastName(newLastName) {
+    this.lastName = newLastName;
+  }
   changeUserName(newUserName) {
     this.userName = newUserName;
   }
@@ -60,19 +72,26 @@ class person {
     this.password = newPassword;
   }
   changeEmail(newEmail) {
-    this.email = newEmail;
+    if (this.emailIsValid(newEmail)) {
+      this.email = newEmail;
+      return true;
+    }
+    return false;
   }
   changeAdress(newAdress) {
     this.adress = newAdress;
   }
-  changeAdress(newAdress) {
-    this.adress = newAdress;
+  changeGender(newGender) {
+    this.gender = newGender;
   }
   changeForPlanArray(newArray) {
     this.forPlanArray = newArray;
   }
   changeSavedInDataBase(status) {
     this.savedInDataBase = status;
+  }
+  changePersonPrivacy(status) {
+    this.personPrivacy = status;
   }
 
   //Methods
@@ -84,28 +103,66 @@ class person {
     this.forPlanArray.push(newForPlanToAdd);
   }
 
-  DeleteForPlan(forPlanToDeleteIndex) {
+  DeleteForPlanByIndex(forPlanToDeleteIndex) {
     if (
       forPlanToDeleteIndex <= this.forPlanArray.length - 1 &&
       forPlanToDeleteIndex >= 0
     ) {
+      this.forPlanArray.splice(forPlanToDeleteIndex, 1);
       for (
-        let currentIndex = forPlanToDeleteIndex + 1;
-        currentIndex < this.forPlanArray.length;
-        currentIndex++
+        let i = forPlanToDeleteIndex;
+        i <= this.forPlanArray.length - 1;
+        i++
       ) {
-        this.forPlanArray[currentIndex - 1] = this.forPlanArray[currentIndex];
-        this.forPlanArray[currentIndex - 1].changeforPlanIndex(
-          currentIndex - 1
+        this.forPlanArray[i].changeforPlanIndex(
+          this.forPlanArray[i].ForPlanIndex - 1
         );
       }
-      //now delete last cell
-      this.forPlanArray.splice(this.forPlanArray.length - 1, 1);
+      return true;
+    } else {
+      return false;
     }
   }
 
-  addNewFurniture(forPlanIndex, typeName, ImageInBase64 = undefined) {
-    this.forPlanArray[forPlanIndex].addNewFurniture(typeName, ImageInBase64);
+  AddNewFurnitureForCertainIndexFloorplan(
+    forPlanIndex,
+    typeName,
+    ImageInBase64 = undefined
+  ) {
+    if (forPlanIndex <= this.forPlanArray.length - 1 && forPlanIndex >= 0) {
+      this.forPlanArray[forPlanIndex].addNewFurniture(typeName, ImageInBase64);
+      return true;
+    }
+    return false;
+  }
+
+  DeleteFurnitureByIndexForCertainFloorPlanIndex(
+    floorPlanIndex,
+    furnitureIndex
+  ) {
+    if (floorPlanIndex <= this.forPlanArray.length - 1 && floorPlanIndex >= 0) {
+      const floorPlan = this.forPlanArray[floorPlanIndex];
+      return floorPlan.DeleteFurnitureByIndex(furnitureIndex);
+    }
+    return false;
+  }
+
+  ChangeFurnitureTypeByFurnitureIndexAndFloorPlanIndex(
+    floorPlanIndex,
+    furnitureIndex,
+    newTypeName
+  ) {
+    if (floorPlanIndex <= this.forPlanArray.length - 1 && floorPlanIndex >= 0) {
+      const floorPlan = this.forPlanArray[floorPlanIndex];
+      return floorPlan.ChangeFurnitureTypeByIndex(furnitureIndex, newTypeName);
+    }
+    return false;
+  }
+  emailIsValid(email) {
+    if (validator.isEmail(email)) {
+      return true;
+    }
+    return false;
   }
 }
 
