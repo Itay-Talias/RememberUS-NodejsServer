@@ -1,0 +1,18 @@
+.floorPlan {
+    width: 1500px;
+    height: 850px;
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+
+.Removebtn {
+    margin-right: 1rem;
+    margin-top:4px;
+    left: 0cm;
+}
+
+.Uploadbtn {
+    left: 20cm;
+}
+

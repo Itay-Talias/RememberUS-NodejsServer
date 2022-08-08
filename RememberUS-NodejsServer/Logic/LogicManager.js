@@ -33,6 +33,7 @@ function createPersonFromDBDocument(Document) {
     true
   );
 
+
   let index = 0;
   for (const currentForPlan of Document.forPlanArray) {
     updatedUser.AddNewForPlan(currentForPlan.forPlanImangeBase64);
@@ -645,3 +646,4 @@ module.exports = {
   UpdateExistUserDetail: UpdateExistUserDetail,
   getPersonDocumentByHisPrivacy: getPersonDocumentByHisPrivacy,
 };
+

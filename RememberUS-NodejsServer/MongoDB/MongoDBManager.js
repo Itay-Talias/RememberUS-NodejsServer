@@ -115,7 +115,7 @@ async function UpdatePersonInDataBase(UpdatedPerson) {
 
 /////////////////////////////////////////////////
 
-//function that add new valid user to data base
+//Function that add new valid user to data base
 async function addValidPersonToDataBase(personToAdd) {
   await ConnectToDataBase();
 
@@ -139,6 +139,7 @@ async function getExistUserDocumentByUserName(userName) {
   return existUserDocument;
 }
 
+
 //function that add Furniture To exist certain User with defult photo
 async function updateCertainFernitureArrayOfPerson(
   userName,
@@ -147,7 +148,6 @@ async function updateCertainFernitureArrayOfPerson(
   await ConnectToDataBase();
 
   const updateFields = { furnitureArray: newFurnitureArray };
-
   const result = await client
     .db("RememberUs-DataBase") //Name of data base
     .collection("signedUsers") //name of collection
