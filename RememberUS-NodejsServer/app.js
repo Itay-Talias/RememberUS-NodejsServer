@@ -10,9 +10,8 @@ const logicManager = require(path.join(__dirname, "/Logic/LogicManager"));
 
 app.listen(port, async () => {
   console.log(`listening on port ${port}`);
-  console.log(`Initializing signedUp user array... `);
-  await logicManager.LoadingsignedUsersArray();
-  console.log(`Finish to Initializing signedUp user array...`);
+  await logicManager.ConnectToMongoDB();
+  console.log("Server is Ready !!!");
 });
 
 app.use(express.json());
@@ -20,6 +19,7 @@ app.use(express.json());
 //when using /api --->going to /api page(apiPath)
 app.use("/api", apiRouter);
 
-app.get("/",(req,res)=>{
+//Function for checking ...
+app.get("/", (req, res) => {
   res.send("Hello");
 });

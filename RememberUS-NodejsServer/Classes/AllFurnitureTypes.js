@@ -8,50 +8,50 @@ class sofa extends furnitureClass.furnitureClass {
 }
 
 class bath extends furnitureClass.furnitureClass {
-  constructor() {
-    super("bath");
+  constructor(furnitureIndex) {
+    super("bath", furnitureIndex);
   }
 }
 
 class toilet extends furnitureClass.furnitureClass {
-  constructor() {
-    super("toilet");
+  constructor(furnitureIndex) {
+    super("toilet", furnitureIndex);
   }
 }
 
 class television extends furnitureClass.furnitureClass {
-  constructor() {
-    super("television");
+  constructor(furnitureIndex) {
+    super("television", furnitureIndex);
   }
 }
 
 class fridge extends furnitureClass.furnitureClass {
-  constructor() {
-    super("fridge");
+  constructor(furnitureIndex) {
+    super("fridge", furnitureIndex);
   }
 }
 
 class door extends furnitureClass.furnitureClass {
-  constructor() {
-    super("door");
+  constructor(furnitureIndex) {
+    super("door", furnitureIndex);
   }
 }
 
 class chair extends furnitureClass.furnitureClass {
-  constructor() {
-    super("chair");
+  constructor(furnitureIndex) {
+    super("chair", furnitureIndex);
   }
 }
 
 class table extends furnitureClass.furnitureClass {
-  constructor() {
-    super("table");
+  constructor(furnitureIndex) {
+    super("table", furnitureIndex);
   }
 }
 
 class carpet extends furnitureClass.furnitureClass {
-  constructor() {
-    super("carpet");
+  constructor(furnitureIndex) {
+    super("carpet", furnitureIndex);
   }
 }
 

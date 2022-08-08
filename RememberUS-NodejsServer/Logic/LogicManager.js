@@ -1,9 +1,14 @@
 `use strict`;
 const path = require("path");
 const person = require(path.join(__dirname, "../Classes/person"));
+const MongoDBManager = require(path.join(
+  __dirname,
+  "../MongoDB/MongoDBManager"
+));
 
 //-------------------------------------input check Functions------------------------------------\\
 const validator = require("validator");
+const { IsuserNameExist } = require("../MongoDB/MongoDBManager");
 
 function emailIsValid(email) {
   if (validator.isEmail(email)) {
@@ -12,133 +17,73 @@ function emailIsValid(email) {
   return false;
 }
 
-let allSignedUserArray = [];
+//-------------------------------------Help Functions-------------------------------------\\
 
+//Function who get document and create person from the document
+function createPersonFromDBDocument(Document) {
+  let updatedUser = new person(
+    Document.firstName,
+    Document.lastName,
+    Document.userName,
+    Document.password,
+    Document.email,
+    Document.adress,
+    Document.gender,
+    Document.personPrivacy,
+    true
+  );
 
-
-function printallSignedUserArrayToConsole() {
-  for (const currentPerson of allSignedUserArray) {
-    console.log(currentPerson);
-    
-async function getAllsignedUserIntoArray() {
-  let documentsArray = await MongoDBManager.getAllsignedUserIntoArray();
-  //Move on the documentsArray and convert into people
-  for (const currentDocument of documentsArray) {
-    let newPersonToAdd = new person(
-      currentDocument.userName,
-      currentDocument.lastName,
-      currentDocument.userName,
-      currentDocument.password,
-      currentDocument.email,
-      currentDocument.adress,
-      currentDocument.gender,
-      currentDocument.forPlanImage,
-      currentDocument._id
-    );
-    if (currentDocument.allFurnitures) {
-      for (const currentFurnitre of currentDocument.allFurnitures) {
-        newPersonToAdd.addNewFurniture(
-          currentFurnitre.Location,
-          currentFurnitre.ImageInBase64,
-          currentFurnitre.typeName
-        );
-      }
+  let index = 0;
+  for (const currentForPlan of Document.forPlanArray) {
+    updatedUser.AddNewForPlan(currentForPlan.forPlanImangeBase64);
+    for (const currentFurnitre of currentForPlan.furnitureArray) {
+      updatedUser.AddNewFurnitureForCertainIndexFloorplan(
+        index,
+        currentFurnitre.typeName,
+        currentFurnitre.imageInBase64
+      );
     }
+    index++;
   }
-}
-
-function IsuserNameExist(userName) {
-  for (const currentPerson of allSignedUserArray) {
-    if (currentPerson.UserName === userName) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function IsuserNameAndpasswordExist(userName, password) {
-  for (const currentPerson of allSignedUserArray) {
-    if (
-      currentPerson.UserName === userName &&
-      currentPerson.Password === password
-    ) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function GetExistPersonFromSignedArray(userName) {
-  for (const currentPerson of allSignedUserArray) {
-    if (currentPerson.UserName === userName) {
-      return currentPerson;
-    }
-  }
-}
-
-function DeleteExistPersonFromSignedArray(userName) {
-  let indexToDelete;
-  for (let index = 0; index < allSignedUserArray.length; index++) {
-    if (allSignedUserArray[index].UserName === userName) {
-      indexToDelete = index;
-      break;
-    }
-  }
-  allSignedUserArray.splice(indexToDelete, 1);
-}
-
-function UpdateExistPersonPassword(userName, newPassword) {
-  for (let currentPerson of allSignedUserArray) {
-    if (currentPerson.UserName === userName) {
-      currentPerson.changePassword(newPassword);
-    }
-  }
-}
-
-function AddNewForPlanForCertainPerson(userName, forPlanImageBase64) {
-  let personToAddForPlanToo = GetExistPersonFromSignedArray(userName);
-  personToAddForPlanToo.AddNewForPlan(forPlanImageBase64);
-}
-
-function DeleteForPlanByIndexForCertainPerson(userName, forPlanIndex) {
-  let personToDeleteForPlanToo = GetExistPersonFromSignedArray(userName);
-  personToDeleteForPlanToo.DeleteForPlan(forPlanIndex);
-}
-
-function AddFurnitureForCertainPersonForCertainForPlan(
-  userName,
-  forPlanIndex,
-  typeName
-) {
-  let personToAddFernitureToo = GetExistPersonFromSignedArray(userName);
-  personToAddFernitureToo.addNewFurniture(forPlanIndex, typeName);
+  return updatedUser;
 }
 
 //-------------------------------------Exports Functions-------------------------------------\\
 
-//Function for Getting Person information----(doesnt use Data Base)
-//1.return "User Found" and person info as JSON if there is matching userName in dataBase
-//2.return "Cant get user info" if not sending userName or if there is no userName in data base same as send
-function GetPersonInfo(userName) {
+//Function for conneccting to mongoDB
+async function ConnectToMongoDB() {
+  await MongoDBManager.ConnectToDataBase();
+}
+
+//Function for Login----(doesnt use Data Base)
+//1.return "Login succssed" and and userInfo as JSON if there is such a user with that userName and password
+//2.return "Login Failed" if any input for logIn is missing or there is no such a user that matching that userName and password
+async function Login(userName, password) {
   if (!userName) {
     return {
-      Status: "Cant get user info",
+      Status: "Login Failed",
       Reason: "Missing input, userName",
     };
   }
-  if (IsuserNameExist(userName)) {
-    for (const currentPerson of allSignedUserArray) {
-      if (currentPerson.UserName === userName) {
-        return {
-          Status: "User Found",
-          userInfo: currentPerson,
-        };
-      }
-    }
+  if (!password) {
+    return {
+      Status: "Login Failed",
+      Reason: "Missing input, password",
+    };
+  }
+
+  const userDocument = await MongoDBManager.IsuserNameAndpasswordExist(
+    userName,
+    password
+  );
+  const userExist = userDocument != null ? true : false;
+
+  if (userExist) {
+    return { Status: "Login succssed", userInfo: userDocument };
   } else {
     return {
-      Status: "Cant get user info",
-      Reason: "No userName matching in data base",
+      Status: "Login failed",
+      Reason: "No user with that userName and password",
     };
   }
 }
@@ -146,14 +91,15 @@ function GetPersonInfo(userName) {
 //Function for SigningUp----(doesnt use Data Base)
 //1.return "Sign Up succssed" if all input valid and there is no one in data base using same userName
 //2.return "Sign Up Failed" if any input for sign up is missing,Email is invalid or someone in data base using same userName
-function SignUp(
+async function SignUp(
   firstName,
   lastName,
   userName,
   password,
   email,
   adress,
-  gender
+  gender,
+  personPrivacy
 ) {
   if (!firstName) {
     return {
@@ -202,63 +148,54 @@ function SignUp(
       Reason: "Missing input, gender",
     };
   }
+  if (!personPrivacy) {
+    return {
+      Status: "Sign Up Failed",
+      Reason: "Missing input, personPrivacy",
+    };
+  }
 
-  //All inputs is valid
-  if (IsuserNameExist(userName) === true) {
+  const userDocument = await MongoDBManager.IsuserNameExist(userName);
+  const userExist = userDocument != null ? true : false;
+
+  if (!userExist) {
+    let newPersonToAddToDB = new person(
+      firstName,
+      lastName,
+      userName,
+      password,
+      email,
+      adress,
+      gender,
+      personPrivacy,
+      true
+    );
+
+    await MongoDBManager.CreateNewPersonInDataBase(newPersonToAddToDB);
+
+    return {
+      Status: "Sign Up succssed",
+    };
+  } else {
     return {
       Status: "Sign Up Failed",
       Reason: "There is user with that userName already",
     };
   }
-  let newPersonToPush = new person(
-    firstName,
-    lastName,
-    userName,
-    password,
-    email,
-    adress,
-    gender,
-    false
-  );
-  //add new person to allSignedUserArray
-  allSignedUserArray.push(newPersonToPush);
-  return {
-    Status: "Sign Up succssed",
-  };
 }
 
-//Function for Login----(doesnt use Data Base)
-//1.return "Login succssed" and and userInfo as JSON if there is such a user with that userName and password
-//2.return "Login Failed" if any input for logIn is missing or there is no such a user that matching that userName and password
-function Login(userName, password) {
-  if (!userName) {
-    return {
-      Status: "Login Failed",
-      Reason: "Missing input, userName",
-    };
-  }
-  if (!password) {
-    return {
-      Status: "Login Failed",
-      Reason: "Missing input, password",
-    };
-  }
-
-  if (IsuserNameAndpasswordExist(userName, password) === true) {
-    const user = GetExistPersonFromSignedArray(userName);
-    return { Status: "Login succssed", userInfo: user };
-  } else {
-    return {
-      Status: "Login failed",
-      Reason: "No user with that userName and password",
-    };
-  }
+//Function for Deleting Account----(Using Data Base)
+//1.return "Delete Succeed" if userName Found
+//2.return "Delete Failed" if not sending userName or if there is no userName in data base same as send
+async function DeletingAccount(userName) {
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  return { Status: "Delete Succeed" };
 }
 
 //Function for Changing password----(doesnt use Data Base)
 //1.return "Delete Succeed" if userName Found
 //2.return "Delete Failed" if not sending userName or if there is no userName in data base same as send
-function ChangePassword(userName, oldPassword, newPassword) {
+async function ChangePassword(userName, oldPassword, newPassword) {
   if (!userName) {
     return {
       Status: "Change password Failed",
@@ -277,11 +214,17 @@ function ChangePassword(userName, oldPassword, newPassword) {
       Reason: "Missing input, new password",
     };
   }
-  if (IsuserNameAndpasswordExist(userName, oldPassword) === true) {
-    //change password in array
-    UpdateExistPersonPassword(userName, newPassword);
-    printallSignedUserArrayToConsole();
-    return { Status: "Change succssed", info: `new password :${newPassword}` };
+
+  let user = await MongoDBManager.IsuserNameAndpasswordExist(
+    userName,
+    oldPassword
+  );
+  const userExist = user != null ? true : false;
+
+  if (userExist) {
+    await MongoDBManager.changePasswordForExistuser(userName, newPassword);
+    user.password = newPassword;
+    return { Status: "Change succssed", info: user };
   } else {
     return {
       Status: "Change password Failed",
@@ -293,7 +236,7 @@ function ChangePassword(userName, oldPassword, newPassword) {
 //Function for Adding new forPlanImage----(doesnt use Data Base)
 //1.return "Add Succeed" if userName Found
 //2.return "Add forPlanImage Failed" if  missing input or if there is no userName in data base same as send
-function addNewForPlan(userName, forPlanImageInBase64) {
+async function addNewForPlanForExistUser(userName, forPlanImageInBase64) {
   if (!userName) {
     return {
       Status: "Add forPlanImage Failed",
@@ -307,64 +250,56 @@ function addNewForPlan(userName, forPlanImageInBase64) {
     };
   }
 
-  if (IsuserNameExist(userName)) {
-    //update the array
-    AddNewForPlanForCertainPerson(userName, forPlanImageInBase64);
-    return { Status: "Add succssed" };
-  } else {
-    return {
-      Status: "Add forPlanImage Failed",
-      Reason: "no user in data base with matching userName",
-    };
-  }
+  //we know for sure user is exists
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+  updatedPerson.AddNewForPlan(forPlanImageInBase64);
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+
+  return {
+    Status: "Add forPlanImage Succssed",
+    info: updatedPerson,
+  };
 }
 
 //Function for Delete forPlanImage by index----(doesnt use Data Base)
 //1.return "Delete Succeed" if userName Found and there is ForPlan with that index
 //2.return "Delete forPlanImage Failed" if  missing input, there is no userName in data base same as send or Index is not in range of that userName
-function DeleteForPlanByIndex(userName, forPlanIndex) {
+async function DeleteForPlanByIndexForExistUser(userName, forPlanIndex) {
   if (!userName) {
     return {
-      Status: "Delete forPlanImage Failed",
+      Status: "Add forPlanImage Failed",
       Reason: "Missing input, userName",
     };
   }
   if (!forPlanIndex) {
     return {
-      Status: "Delete forPlanImageBase64 Failed",
+      Status: "Add forPlanImageBase64 Failed",
       Reason: "Missing input, forPlanIndex",
     };
   }
 
-  if (IsuserNameExist(userName)) {
-    //update the array
-    const personToDeleteForPlanToo = GetExistPersonFromSignedArray(userName);
-    if (
-      Number(forPlanIndex) < 0 ||
-      Number(forPlanIndex) > personToDeleteForPlanToo.ForPlanArray.length - 1
-    ) {
-      return {
-        Status: "Delete forPlanImageBase64 Failed",
-        Reason: `forPlanIndex for userName: ${userName} must be 0 <= forPlanIndex <= ${
-          personToDeleteForPlanToo.ForPlanArray.length - 1
-        } `,
-      };
-    } else {
-      DeleteForPlanByIndexForCertainPerson(userName, Number(forPlanIndex));
-      return { Status: "Delete succssed" };
-    }
+  //we know for sure user is exists
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+  const deleteStatus = updatedPerson.DeleteForPlanByIndex(forPlanIndex);
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+  if (deleteStatus == true) {
+    return {
+      Status: "Delete forPlanImage Succssed",
+      info: updatedPerson,
+    };
   } else {
     return {
-      Status: "Delete forPlanImage Failed",
-      Reason: "no user in data base with matching userName",
+      Status: "Delete forPlanImage failed",
+      Reason: "Index is not in range",
     };
   }
 }
 
-//Function for Adding new forPlanImage----(doesnt use Data Base)
-//1.return "Add new Furtinure"
-//2.return "Add new Furtinure Failed" if  missing input, there is no userName in data base same as send or Index is not in range of that userName
-function AddNewFurnitureManuallyToCertainIndexForPlanForCertainPerson(
+async function AddNewFurnitureManuallyWithoutPhotoToCertainIndexForPlanForCertainExistUser(
   userName,
   forPlanIndex,
   typeName
@@ -388,206 +323,325 @@ function AddNewFurnitureManuallyToCertainIndexForPlanForCertainPerson(
     };
   }
 
-  if (IsuserNameExist(userName) === true) {
-    const personToAddFurnitureToo = GetExistPersonFromSignedArray(userName);
-    if (
-      Number(forPlanIndex) < 0 ||
-      Number(forPlanIndex) > personToDeleteForPlanToo.ForPlanArray.length - 1
-    ) {
-      return {
-        Status: "Add new Furtinure Failed",
-        Reason: `forPlanIndex for userName: ${userName} must be 0 <= forPlanIndex <= ${
-          personToDeleteForPlanToo.ForPlanArray.length - 1
-        } `,
-      };
-    } else {
-    }
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+  const addStatus = updatedPerson.AddNewFurnitureForCertainIndexFloorplan(
+    forPlanIndex,
+    typeName
+  );
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+
+  if (addStatus == true) {
+    return {
+      Status: "Add Furniture Succssed",
+      info: updatedPerson,
+    };
   } else {
     return {
       Status: "Add new Furtinure Failed",
-      Reason: "no user in data base with matching userName",
+      Reason: "floorPlan index is not valid",
     };
   }
 }
 
-//-------------------------------------MongoDB Section-------------------------------------\\
-const MongoDBManager = require(path.join(
-  __dirname,
-  "../MongoDB/MongoDBManager"
-));
-
-//Function that building new Person from MongoDB Document
-function BuildingNewPersonFromMongoDBDocument(Documet) {
-  let newPersonToAdd = new person(
-    Documet.firstName,
-    Documet.lastName,
-    Documet.userName,
-    Documet.password,
-    Documet.email,
-    Documet.adress,
-    Documet.gender,
-    Documet.savedInDataBase
-  );
-  for (const currentForPlan of Documet.forPlanArray) {
-    newPersonToAdd.AddNewForPlan(currentForPlan.forPlanImangeBase64);
-    for (const currentFurniture of currentForPlan.furnitureArray) {
-      newPersonToAdd.addNewFurniture(
-        currentForPlan.forPlanIndex,
-        currentFurniture.typeName,
-        currentFurniture.imageInBase64
-      );
-    }
-  }
-
-  return newPersonToAdd;
-}
-
-//Function for Loading all person from dataBase to array----(doesnt use Data Base)
-//1.return "User Found" and person info as JSON if there is matching userName in dataBase
-//2.return "Cant get user info" if not sending userName or if there is no userName in data base same as send
-async function LoadingsignedUsersArray() {
-  let documentsArray =
-    await MongoDBManager.GetAllDocumentsFromsignedUsersCollection();
-
-  //Converts each document to Person
-  for (const currentDocument of documentsArray) {
-    let newPersonToAdd = BuildingNewPersonFromMongoDBDocument(currentDocument);
-    allSignedUserArray.push(newPersonToAdd);
-  }
-  printallSignedUserArrayToConsole();
-}
-
-//Function for Deleting Account----(Using Data Base)
-//1.return "Delete Succeed" if userName Found
-//2.return "Delete Failed" if not sending userName or if there is no userName in data base same as send
-async function DeletingAccount(userName) {
+async function DeleteFurnitureByIndexOfCertainIndexFloorplanForExistUser(
+  userName,
+  floorPlanIndex,
+  furnitureIndex
+) {
   if (!userName) {
     return {
-      Status: "Delete Failed",
+      Status: "Delete Furtinure Failed",
       Reason: "Missing input, userName",
     };
   }
-  if (IsuserNameExist(userName) === true) {
-    const personToDelete = GetExistPersonFromSignedArray(userName);
-    //delete from array
-    DeleteExistPersonFromSignedArray(userName);
+  if (!floorPlanIndex) {
+    return {
+      Status: "Delete Furtinure Failed",
+      Reason: "Missing input, forPlanIndex",
+    };
+  }
+  if (!furnitureIndex) {
+    return {
+      Status: "Delete Furtinure Failed",
+      Reason: "Missing input, typeName",
+    };
+  }
 
-    if (personToDelete.SavedInDataBase === true) {
-      //delete from data base
-      await MongoDBManager.DeletePersonFromsignedUsersCollection(userName);
-    }
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+  const deleteStatus =
+    updatedPerson.DeleteFurnitureByIndexForCertainFloorPlanIndex(
+      floorPlanIndex,
+      furnitureIndex
+    );
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
 
-    return { Status: "Delete Succeed" };
+  if (deleteStatus == true) {
+    return {
+      Status: "Delete Furniture Succssed",
+      info: updatedPerson,
+    };
   } else {
     return {
-      Status: "Delete Failed",
-      Reason: "There is no user with that userName in dataBase",
+      Status: "Delete Furtinure Failed",
+      Reason: "floorPlan index or furniture index is not valid",
     };
   }
 }
 
-//Function for Logout----(Using Data Base)
-//alway get signed userName so always return Logout Succssed
-async function Logout(userName) {
-  let logOutPerson = GetExistPersonFromSignedArray(userName);
-  if (logOutPerson.SavedInDataBase === true) {
-    await MongoDBManager.UpdatePersonInDataBase(logOutPerson);
-  } else {
-    logOutPerson.changeSavedInDataBase(true);
-    await MongoDBManager.CreateNewPersonInDataBase(logOutPerson);
+async function AddNewFurnitureWithPhotoToCertainIndexForPlanForCertainExistUser(
+  userName,
+  floorPlanIndex,
+  ImageInBase64
+) {
+  if (!userName) {
+    return {
+      Status: "Add new Furtinure Failed",
+      Reason: "Missing input, userName",
+    };
   }
-  console.log(logOutPerson);
-  return { Status: "Logout sucssed" };
+  if (!floorPlanIndex) {
+    return {
+      Status: "Add new Furtinure Failed",
+      Reason: "Missing input, floorPlanIndex",
+    };
+  }
+  if (!ImageInBase64) {
+    return {
+      Status: "Add new Furtinure Failed",
+      Reason: "Missing input, ImageInBase64",
+    };
+  }
+
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+
+  //send to phyton to get typeName
+  const typeName = "chair";
+
+  const addStatus = updatedPerson.AddNewFurnitureForCertainIndexFloorplan(
+    forPlanIndex,
+    typeName,
+    ImageInBase64
+  );
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+
+  if (addStatus == true) {
+    return {
+      Status: "Add Furniture Succssed",
+      info: updatedPerson,
+    };
+  } else {
+    return {
+      Status: "Add new Furtinure Failed",
+      Reason: "floorPlan index is not valid",
+    };
+  }
 }
 
+async function ChangeFurnitureTypeByFurnitureIndexAndFloorPlanIndexOfExistUser(
+  userName,
+  floorPlanIndex,
+  furnitureIndex,
+  newTypeName
+) {
+  if (!userName) {
+    return {
+      Status: "Add new Furtinure Failed",
+      Reason: "Missing input, userName",
+    };
+  }
+  if (!floorPlanIndex) {
+    return {
+      Status: "Add new Furtinure Failed",
+      Reason: "Missing input, floorPlanIndex",
+    };
+  }
+  if (!furnitureIndex) {
+    return {
+      Status: "Add new Furtinure Failed",
+      Reason: "Missing input, furnitureIndex",
+    };
+  }
+  if (!newTypeName) {
+    return {
+      Status: "Add new Furtinure Failed",
+      Reason: "Missing input, newTypeName",
+    };
+  }
+
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+  const updateStatus =
+    updatedPerson.ChangeFurnitureTypeByFurnitureIndexAndFloorPlanIndex(
+      floorPlanIndex,
+      furnitureIndex,
+      newTypeName
+    );
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+
+  if (updateStatus == true) {
+    return {
+      Status: "Update furniture type Succssed",
+      info: updatedPerson,
+    };
+  } else {
+    return {
+      Status: "Update furniture type Failed",
+      Reason: "floorPlan index or furniture index is not valid",
+    };
+  }
+}
+
+async function UpdateExistUserDetail(userName, updateField, updateData) {
+  if (!userName) {
+    return {
+      Status: "Add UpdateExistUserDetails Failed",
+      Reason: "Missing input, userName",
+    };
+  }
+  if (!updateField) {
+    return {
+      Status: "Add UpdateExistUserDetails Failed",
+      Reason: "Missing input, updateField",
+    };
+  }
+  if (!updateData) {
+    return {
+      Status: "Add UpdateExistUserDetails Failed",
+      Reason: "Missing input, updateData",
+    };
+  }
+
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+
+  switch (updateField) {
+    case "firstName": {
+      updatedPerson.changeFirstName(updateData);
+      await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+      return {
+        Status: "Update firstName Succssed",
+        info: updatedPerson,
+      };
+    }
+    case "lastName": {
+      updatedPerson.changeLastName(updateData);
+      await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+      return {
+        Status: "Update lastName Succssed",
+        info: updatedPerson,
+      };
+    }
+    case "userName": {
+      updatedPerson.changeUserName(updateData);
+      await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+      return {
+        Status: "Update userName Succssed",
+        info: updatedPerson,
+      };
+    }
+    case "password": {
+      updatedPerson.changePassword(updateData);
+      await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+      return {
+        Status: "Update password Succssed",
+        info: updatedPerson,
+      };
+    }
+    case "email": {
+      const emailChanged = updatedPerson.changeEmail(updateData);
+      await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+      if (emailChanged) {
+        return {
+          Status: "Update email Succssed",
+          info: updatedPerson,
+        };
+      } else {
+        return {
+          Status: "Update email Failed",
+          Reason: "Invalid Email",
+        };
+      }
+    }
+    case "adress": {
+      updatedPerson.changeAdress(updateData);
+      await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+      return {
+        Status: "Update adress Succssed",
+        info: updatedPerson,
+      };
+    }
+    case "gender": {
+      updatedPerson.changeGender(updateData);
+      await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+      return {
+        Status: "Update gender Succssed",
+        info: updatedPerson,
+      };
+    }
+    case "personPrivacy": {
+      updatedPerson.changePersonPrivacy(updateData);
+      await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+      return {
+        Status: "Update personPrivacy Succssed",
+        info: updatedPerson,
+      };
+    }
+  }
+}
+
+async function getPersonDocumentByHisPrivacy(userName) {
+  if (!userName) {
+    return {
+      Status: "Add UpdateExistUserDetails Failed",
+      Reason: "Missing input, userName",
+    };
+  }
+  const userDocument = await MongoDBManager.IsuserNameExist(userName);
+  if (userDocument) {
+    if (userDocument.personPrivacy == "false") {
+      return {
+        Status: "userName exist and not private",
+        info: userDocument,
+      };
+    } else {
+      return {
+        Status: "Failed",
+        Reason: "userName is private",
+      };
+    }
+  } else {
+    return {
+      Status: "Failed",
+      Reason: "userName not found",
+    };
+  }
+}
 ///////////////////////////////// Exports //////////////////////////
 
 module.exports = {
-  GetPersonInfo: GetPersonInfo,
   SignUp: SignUp,
   Login: Login,
   DeletingAccount: DeletingAccount,
   ChangePassword: ChangePassword,
-  LoadingsignedUsersArray: LoadingsignedUsersArray,
-  Logout: Logout,
-  addNewForPlan: addNewForPlan,
-  DeleteForPlanByIndex: DeleteForPlanByIndex,
+  addNewForPlanForExistUser: addNewForPlanForExistUser,
+  DeleteForPlanByIndexForExistUser: DeleteForPlanByIndexForExistUser,
+  ConnectToMongoDB: ConnectToMongoDB,
+  AddNewFurnitureManuallyWithoutPhotoToCertainIndexForPlanForCertainExistUser:
+    AddNewFurnitureManuallyWithoutPhotoToCertainIndexForPlanForCertainExistUser,
+  DeleteFurnitureByIndexOfCertainIndexFloorplanForExistUser:
+    DeleteFurnitureByIndexOfCertainIndexFloorplanForExistUser,
+  AddNewFurnitureWithPhotoToCertainIndexForPlanForCertainExistUser:
+    AddNewFurnitureWithPhotoToCertainIndexForPlanForCertainExistUser,
+  ChangeFurnitureTypeByFurnitureIndexAndFloorPlanIndexOfExistUser:
+    ChangeFurnitureTypeByFurnitureIndexAndFloorPlanIndexOfExistUser,
+  UpdateExistUserDetail: UpdateExistUserDetail,
+  getPersonDocumentByHisPrivacy: getPersonDocumentByHisPrivacy,
 };
-
-//function who add amount of furniture to Person data Base
-async function AddOneFurnitureByuserNameWithPhoto(
-  userName,
-  furnitureImageBase64
-) {
-  if (!userName) {
-    return {
-      Status: "Add Furniture Failed",
-      Reason: "Missing input, userName",
-    };
-  }
-  if (!furnitureImageBase64) {
-    return {
-      Status: "Add Furniture Failed",
-      Reason: "Missing input, furnitureImageBase64",
-    };
-  }
-  if (checkIfUserNameExistInallSignedUserArray(userName)) {
-    //decode the photo
-    const furtinureType = "sofa";
-    //add to person Array
-    addToExistUserNewFernitureWithPhoto(
-      userName,
-      furtinureType,
-      furnitureImageBase64
-    );
-
-    //add to data Base
-    await MongoDBManager.updateCertainFernitureArrayOfPerson(
-      userName,
-      getExistCertainPersonFromallSignedUserArrayByuserName(userName)
-        .FurnitureArray
-    );
-    return {
-      Status: "Add Furniture succssed",
-    };
-  } else {
-    return {
-      Status: "Add Furniture Failed",
-      Reason: "No userName matching in data base",
-    };
-  }
-}
-
-//function who add amount of furniture to Person data Base
-async function AddOneFurnitureByuserNameManually(userName, furnitureType) {
-  if (!userName) {
-    return {
-      Status: "Add Furniture Failed",
-      Reason: "Missing input, userName",
-    };
-  }
-  if (!furnitureType) {
-    return {
-      Status: "Add Furniture Failed",
-      Reason: "Missing input, furnitureType",
-    };
-  }
-  if (checkIfUserNameExistInallSignedUserArray(userName)) {
-    //add to person Array
-    addToExistUserNewFernitureWithoutPhoto(userName, furnitureType);
-    //add to data Base
-    await MongoDBManager.updateCertainFernitureArrayOfPerson(
-      userName,
-      getExistCertainPersonFromallSignedUserArrayByuserName(userName)
-        .FurnitureArray
-    );
-    return {
-      Status: "Add Furniture succssed",
-    };
-  } else {
-    return {
-      Status: "Add Furniture Failed",
-      Reason: "No userName matching in data base",
-    };
-  }
-}
