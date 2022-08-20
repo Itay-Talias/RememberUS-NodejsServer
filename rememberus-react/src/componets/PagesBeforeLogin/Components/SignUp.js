@@ -1,16 +1,16 @@
 import { React, useState } from "react";
-import "./SignUp.css";
-import "./background.css";
+import "../CSS/SignUp.css";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import logo from "./RememberUs-Logo.png";
+import logo from "../../../Images/RememberUs-Logo.png";
 import { MenuItem } from "@mui/material";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const currencies = ["Male", "Female"];
+const currencies1 = ["Male", "Female"];
+const currencies2 = ["True", "False"];
 
 const SignUp = (props) => {
   let navigate = useNavigate();
@@ -21,6 +21,7 @@ const SignUp = (props) => {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidGender, setIsValidGender] = useState(true);
   const [isValidAdress, setIsValidAdress] = useState(true);
+  const [isValidPrivacy, setIsValidPrivacy] = useState(true);
   const [needErrorMsg, setNeedErrorMsg] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -80,6 +81,14 @@ const SignUp = (props) => {
     setEnteredAdress(event.target.value);
   };
 
+  const [enteredPrivacy, setEnteredPrivacy] = useState("");
+  const PrivacyChangeHandler = (event) => {
+    if (enteredAdress.trim().length === 0) {
+      setIsValidPrivacy(true);
+    }
+    setEnteredPrivacy(event.target.value);
+  };
+
   const SignUpHandler = (event) => {
     event.preventDefault();
     setNeedErrorMsg(false);
@@ -99,10 +108,13 @@ const SignUp = (props) => {
       setIsValidEmail(false);
     }
     if (enteredAdress.trim().length === 0) {
-      setIsValidGender(false);
+      setIsValidAdress(false);
     }
     if (enteredGender.trim().length === 0) {
       setIsValidGender(false);
+    }
+    if (enteredPrivacy.trim().length === 0) {
+      setIsValidPrivacy(false);
     }
     axios
       .post(`http://localhost:4000/api/v1/User/SignUp`, {
@@ -113,15 +125,16 @@ const SignUp = (props) => {
         email: enteredEmail,
         adress: enteredAdress,
         gender: enteredGender,
+        personPrivacy: enteredPrivacy,
       })
       .then((res) => {
         console.log(res);
         console.log(res.data);
         if (res.data.Status === "Sign Up succssed") {
-          props.onLoggedUser(res.data.userInfo);
-          navigate("../HomePrivate", {
-            replace: true,
-          });
+          setNeedErrorMsg(true);
+          setErrorMsg(
+            "Sign Up succssed, you can go back to login page in order to Login"
+          );
         } else {
           setNeedErrorMsg(true);
           setErrorMsg(res.data.Reason);
@@ -205,7 +218,21 @@ const SignUp = (props) => {
             value={enteredGender}
             onChange={GenderChangeHandler}
           >
-            {currencies.map((option) => (
+            {currencies1.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            className={isValidPrivacy ? "valid" : "invalid"}
+            required
+            select
+            label="Privacy"
+            value={enteredPrivacy}
+            onChange={PrivacyChangeHandler}
+          >
+            {currencies2.map((option) => (
               <MenuItem key={option} value={option}>
                 {option}
               </MenuItem>
@@ -221,7 +248,7 @@ const SignUp = (props) => {
           Sign-up
         </Button>
         <Link to="/Login" style={{ textDecoration: "none" }}>
-          {<Button variant="contained">Log-in</Button>}
+          {<Button variant="contained">Back to Login page</Button>}
         </Link>
       </div>
     </div>

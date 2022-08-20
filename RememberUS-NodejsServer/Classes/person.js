@@ -164,6 +164,12 @@ class person {
     }
     return false;
   }
+  LikeFloorPlanByIndex(userName, index) {
+    return this.forPlanArray[index].LikeFloorPlan(userName);
+  }
+  DisLikeFloorPlanByIndex(userName, index) {
+    return this.forPlanArray[index].DislikeFloorPlan(userName);
+  }
 }
 
 module.exports = person;

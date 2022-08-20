@@ -33,7 +33,6 @@ function createPersonFromDBDocument(Document) {
     true
   );
 
-
   let index = 0;
   for (const currentForPlan of Document.forPlanArray) {
     updatedUser.AddNewForPlan(currentForPlan.forPlanImangeBase64);
@@ -43,6 +42,10 @@ function createPersonFromDBDocument(Document) {
         currentFurnitre.typeName,
         currentFurnitre.imageInBase64
       );
+    }
+    console.log(currentForPlan.likes.length);
+    for (let i = 0; i < currentForPlan.likes.length; i++) {
+      updatedUser.LikeFloorPlanByIndex(currentForPlan.likes[i], index);
     }
     index++;
   }
@@ -84,7 +87,7 @@ async function Login(userName, password) {
   } else {
     return {
       Status: "Login failed",
-      Reason: "No user with that userName and password",
+      Reason: "Incorrent Username and password",
     };
   }
 }
@@ -607,7 +610,7 @@ async function getPersonDocumentByHisPrivacy(userName) {
   }
   const userDocument = await MongoDBManager.IsuserNameExist(userName);
   if (userDocument) {
-    if (userDocument.personPrivacy == "false") {
+    if (userDocument.personPrivacy == "False") {
       return {
         Status: "userName exist and not private",
         info: userDocument,
@@ -622,6 +625,69 @@ async function getPersonDocumentByHisPrivacy(userName) {
     return {
       Status: "Failed",
       Reason: "userName not found",
+    };
+  }
+}
+
+async function LikeFloorPlanByUserName(userName, index) {
+  if (!userName) {
+    return {
+      Status: "Like Failed",
+      Reason: "Missing input, userName",
+    };
+  }
+  if (!index) {
+    return {
+      Status: "Like Failed",
+      Reason: "Missing input, index",
+    };
+  }
+
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+  const LikeSuccssed = updatedPerson.LikeFloorPlanByIndex(userName, index);
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+
+  if (LikeSuccssed) {
+    return { Status: "Like succssed", personInfo: updatedPerson };
+  } else {
+    return {
+      Status: "Like Failed",
+      Reason: "userName already liked that flooplan",
+    };
+  }
+}
+
+async function DislikeFloorPlanByUserName(userName, index) {
+  if (!userName) {
+    return {
+      Status: "Like Failed",
+      Reason: "Missing input, userName",
+    };
+  }
+  if (!index) {
+    return {
+      Status: "Like Failed",
+      Reason: "Missing input, index",
+    };
+  }
+
+  let user = await MongoDBManager.IsuserNameExist(userName);
+  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  const updatedPerson = createPersonFromDBDocument(user);
+  const DislikeSuccssed = updatedPerson.DisLikeFloorPlanByIndex(
+    userName,
+    index
+  );
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+
+  if (DislikeSuccssed) {
+    return { Status: "Dislike succssed", personInfo: updatedPerson };
+  } else {
+    return {
+      Status: "Dislike Failed",
+      Reason: "userName hasnt like the photo",
     };
   }
 }
@@ -645,5 +711,6 @@ module.exports = {
     ChangeFurnitureTypeByFurnitureIndexAndFloorPlanIndexOfExistUser,
   UpdateExistUserDetail: UpdateExistUserDetail,
   getPersonDocumentByHisPrivacy: getPersonDocumentByHisPrivacy,
+  LikeFloorPlanByUserName: LikeFloorPlanByUserName,
+  DislikeFloorPlanByUserName: DislikeFloorPlanByUserName,
 };
-

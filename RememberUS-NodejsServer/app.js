@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 const port = 4000;
 
-//LogicManager,initialize the logic
+//LogicManager,initialize the logic`
 const logicManager = require(path.join(__dirname, "/Logic/LogicManager"));
 
 app.listen(port, async () => {
@@ -22,7 +22,3 @@ app.use(cors());
 app.use("/api", apiRouter);
 
 //Function for checking ...
-
-app.get("/", (req, res) => {
-  res.send("Hello");
-});

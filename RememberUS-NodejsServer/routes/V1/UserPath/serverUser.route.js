@@ -128,3 +128,21 @@ UserRouter.post("/UpdateDetail", async (req, res) => {
 UserRouter.post("/GiveAnotherPersonDocumentByHisPrivacy", async (req, res) => {
   res.send(await LogicManager.getPersonDocumentByHisPrivacy(req.body.userName));
 });
+
+UserRouter.post("/Like", async (req, res) => {
+  res.send(
+    await LogicManager.LikeFloorPlanByUserName(
+      req.body.userName,
+      req.body.floorPlanIndex
+    )
+  );
+});
+
+UserRouter.post("/Dislike", async (req, res) => {
+  res.send(
+    await LogicManager.DislikeFloorPlanByUserName(
+      req.body.userName,
+      req.body.floorPlanIndex
+    )
+  );
+});

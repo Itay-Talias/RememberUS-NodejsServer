@@ -61,7 +61,7 @@ const TitlebarImageList = () => {
               <img
                 src={
                   item.flag
-                    ? require(`../../../img/${item.title}`)
+                    ? require(`../../../Images/${item.title}`)
                     : `${item.img}`
                 }
                 alt={item.title}
