@@ -1,45 +1,37 @@
 import { React, useState } from "react";
-import "./Login.css";
-import "./background.css";
+import "../CSS/Login.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
-import logo from "./RememberUs-Logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import logo from "../../../Images/RememberUs-Logo.png";
+import { Link, useNavigate } from "react-router-dom"; //link to nevigate to spesic router from html and useNevigate to nevigate from code to another router from spesific
 import axios from "axios";
 
 const Login = (props) => {
   let navigate = useNavigate();
+
   const [isValidUserName, setIsValidUserName] = useState(true);
   const [isValidPassword, setIsValidPassword] = useState(true);
+
   const [needErrorMsg, setNeedErrorMsg] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   const [enteredUserName, setEnteredUserName] = useState("");
+  const [enteredPassword, setEnteredPassword] = useState("");
   const UserNameChangeHandler = (event) => {
-    if (enteredUserName.trim().length === 0) {
-      setIsValidUserName(true);
-    }
+    setIsValidUserName(true);
+    setIsValidPassword(true);
     setEnteredUserName(event.target.value);
   };
-
-  const [enteredPassword, setEnteredPassword] = useState("");
   const PasswordChangeHandler = (event) => {
-    if (enteredPassword.trim().length === 0) {
-      setIsValidPassword(true);
-    }
+    setIsValidUserName(true);
+    setIsValidPassword(true);
     setEnteredPassword(event.target.value);
   };
 
   const LoginHandler = (event) => {
     event.preventDefault();
     setNeedErrorMsg(false);
-    if (enteredUserName.trim().length === 0) {
-      setIsValidUserName(false);
-    }
-    if (enteredPassword.trim().length === 0) {
-      setIsValidPassword(false);
-    }
     axios
       .post(`http://localhost:4000/api/v1/User/Login`, {
         userName: enteredUserName,
@@ -49,13 +41,16 @@ const Login = (props) => {
         console.log(res);
         console.log(res.data);
         if (res.data.Status === "Login succssed") {
+          //nevigate will go back to app and search for the router
           props.onLoggedUser(res.data.userInfo);
-          navigate("../HomePrivate", {
+          navigate("/userHomePage", {
             replace: true,
           });
         } else {
           setNeedErrorMsg(true);
           setErrorMsg(res.data.Reason);
+          setIsValidPassword(false);
+          setIsValidUserName(false);
         }
       });
   };
@@ -69,10 +64,7 @@ const Login = (props) => {
         <div>
           <TextField
             className={isValidUserName ? "valid" : "invalid"}
-            name="username"
-            type="username"
-            placeholder="username"
-            label="username"
+            label="Username"
             value={enteredUserName}
             onChange={UserNameChangeHandler}
           />
@@ -80,11 +72,9 @@ const Login = (props) => {
         <div>
           <TextField
             className={isValidPassword ? "valid" : "invalid"}
-            name="password"
-            type="password"
-            placeholder="password"
             label="Password"
             value={enteredPassword}
+            type="password"
             onChange={PasswordChangeHandler}
           />
         </div>

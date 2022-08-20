@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import "./Start.css";
+import "../CSS/Start.css";
 
 function Start() {
   return (
     <div className="FirstBtn">
       <Link to="/Login" style={{ textDecoration: "none" }}>
-        {<h2>Let's start</h2>}
+        {<h1>Click to start</h1>}
       </Link>
     </div>
   );

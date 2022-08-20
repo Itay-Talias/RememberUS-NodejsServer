@@ -31,3 +31,6 @@ ChangeTypeNameOfCertainFurnitureIndexForCertainFloorplanIndexOfExistUser
 UpdateDetail
 
 {"userName":"EladTT","updateField":"personPrivacy","updateData":"true"}
+
+Like/Dislike
+{"userName":"EladTT","floorPlanIndex":"0"}

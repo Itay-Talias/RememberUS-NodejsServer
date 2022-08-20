@@ -6,6 +6,7 @@ class forPlanImage {
     this.forPlanIndex = forPlanIndex;
     this.forPlanImangeBase64 = forPlanImangeBase64;
     this.furnitureArray = [];
+    this.likes = [];
   }
 
   //Getters
@@ -17,6 +18,9 @@ class forPlanImage {
   }
   get FurnitureArray() {
     return this.furnitureArray;
+  }
+  get LikesAmount() {
+    return this.likes.length();
   }
 
   //Setters
@@ -67,6 +71,24 @@ class forPlanImage {
     } else {
       return false;
     }
+  }
+  LikeFloorPlan(userName) {
+    for (let i = 0; i < this.likes.length; i++) {
+      if (this.likes[i] == userName) {
+        return false;
+      }
+    }
+    this.likes.push(userName);
+    return true;
+  }
+  DislikeFloorPlan(userName) {
+    for (let i = 0; i < this.likes.length; i++) {
+      if (this.likes[i] == userName) {
+        this.likes.splice(i, 1);
+        return true;
+      }
+    }
+    return false;
   }
 }
 
