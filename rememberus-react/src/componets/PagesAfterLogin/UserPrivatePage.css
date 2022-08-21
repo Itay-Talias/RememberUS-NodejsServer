@@ -1,0 +1,31 @@
+.display-none {
+    display: none;
+}
+
+.floorPlan {
+    position: relative;
+    width: 40%;
+    left: 10%;
+}
+
+.Removebtn {
+    left: 10%;
+}
+
+.Uploadbtn {
+    left: 40%;
+    margin-top: 2%;
+}
+
+.Logo-div {
+    display: inline-block;
+    position: absolute;
+    right: 3%;
+}
+
+.Images-bar {
+    display: inline-block !important;
+    position: absolute;
+    right: 5%;
+    top: 0;
+}

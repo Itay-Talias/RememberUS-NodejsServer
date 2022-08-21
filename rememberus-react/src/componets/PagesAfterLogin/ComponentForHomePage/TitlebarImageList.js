@@ -54,7 +54,7 @@ const TitlebarImageList = () => {
             <ImageList
                 sx={{
                     width: "300px",
-                    height: "370px",
+                    height: "480px",
                 }}
             >
                 <ImageListItem key="Subheader" cols={2}>
