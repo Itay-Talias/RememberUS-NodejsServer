@@ -54,7 +54,7 @@ const TitlebarImageList = () => {
             <ImageList
                 sx={{
                     width: "300px",
-                    height: "300px",
+                    height: "370px",
                 }}
             >
                 <ImageListItem key="Subheader" cols={2}>
@@ -66,7 +66,7 @@ const TitlebarImageList = () => {
                             <img
                                 src={
                                     item.flag
-                                        ? require(`../../../Images/${item.title}`)
+                                        ? require(`../../../Images/furnituresImages/${item.title}`)
                                         : `${item.img}`
                                 }
                                 alt={item.title}

@@ -15,9 +15,9 @@ const UserHomePage = (props) => {
         setFloorPlanImage(newFloorPlanImage);
     };
     return (
-        <div>
-            <div>{/* <AppBarMenu ></AppBarMenu> */}</div>
-            <form className="Myform1">
+        <div className="conteiner">
+            <AppBarMenu></AppBarMenu>
+            <div className="Myform1">
                 <LoggedInUserInfo
                     name={`${props.userInfo.lastName} ${props.userInfo.firstName}`}
                     street={props.userInfo.adress}
@@ -77,7 +77,7 @@ const UserHomePage = (props) => {
                 <div className="Images-bar">
                     <TitlebarImageList />
                 </div>
-            </form>
+            </div>
         </div>
     );
 };

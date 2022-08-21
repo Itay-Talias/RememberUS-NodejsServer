@@ -1,4 +1,4 @@
-.Buttons {
+/* .Buttons {
   font: inherit;
   cursor: pointer;
   padding: 0.5rem 2rem;
@@ -7,4 +7,15 @@
   color: hsl(0, 22%, 91%);
   border-radius: 12px;
   margin-right: 1rem;
+} */
+
+.Myform1 button {
+    font: bold;
+    cursor: pointer;
+    padding: 0.8rem 1rem;
+    border: 1px solid #232124;
+    background-color: #232124;
+    color: white;
+    border-radius: 12px;
+    font-size: 8px;
 }
