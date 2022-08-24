@@ -3,15 +3,39 @@ import "./UserPrivatePage.css";
 import "./background-style.css";
 import LoggedInUserInfo from "./ComponentForHomePage/LoggedInUserInfo";
 import { Button } from "@mui/material";
-import logo from "../../Images/RememberUs-Logo.png";
 import ImageUploading from "react-images-uploading";
 import TitlebarImageList from "./ComponentForHomePage/TitlebarImageList";
+import axios from "axios";
 
 const UserPrivatePage = (props) => {
-    console.log(props.userInfo);
+    // console.log(props.userInfo);
 
     const [floorPlanImage, setFloorPlanImage] = useState([]);
     const onChangeFoorPlan = (newFloorPlanImage) => {
+        // if (floorPlanImage.length === 0) {
+        //     axios
+        //         .post(`http://localhost:4000/api/v1/User/AddForPlanImage`, {
+        //             userName: props.userInfo.userName,
+        //             forPlanImageInBase64: newFloorPlanImage,
+        //         })
+        //         .then((res) => {
+        //             console.log(res);
+        //             console.log(res.data);
+        //         });
+        // } else {
+        //     axios
+        //         .post(
+        //             `http://localhost:4000/api/v1/User/DeleteForPlanByIndex`,
+        //             {
+        //                 userName: props.userInfo.userName,
+        //                 forPlanIndex: 0,
+        //             }
+        //         )
+        //         .then((res) => {
+        //             console.log(res);
+        //             console.log(res.data);
+        //         });
+        // }
         setFloorPlanImage(newFloorPlanImage);
     };
     return (
@@ -38,15 +62,7 @@ const UserPrivatePage = (props) => {
                                 </Button>
                             ) : undefined}
                             {floorPlanImage.map((image, index) => (
-                                <div
-                                    key={index}
-                                    className="image-item"
-                                    style={{
-                                        "margin-top": "10%",
-                                        position: "relative",
-                                        display: "inline-block",
-                                    }}
-                                >
+                                <div key={index} className="image-item">
                                     <img
                                         className="floorPlan"
                                         src={image["data_url"]}

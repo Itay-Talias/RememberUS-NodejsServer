@@ -4,12 +4,15 @@
 
 .floorPlan {
     position: relative;
-    width: 40%;
-    left: 10%;
+    width: 70%;
+    height: 600px;
+    top: 120px;
+    border-radius: 4px;
 }
 
 .Removebtn {
-    left: 10%;
+    left: 0;
+    top: 120px;
 }
 
 .Uploadbtn {
@@ -26,6 +29,14 @@
 .Images-bar {
     display: inline-block !important;
     position: absolute;
-    right: 5%;
+    right: 2%;
     top: 0;
+}
+
+@media (max-width: 1400px) {
+    .floorPlan {
+        position: relative;
+        width: 60%;
+        height: 380px;
+    }
 }

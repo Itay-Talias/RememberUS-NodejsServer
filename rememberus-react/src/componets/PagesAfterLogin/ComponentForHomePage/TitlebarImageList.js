@@ -7,6 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import ImageUploading from "react-images-uploading";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
+import "./TitlebarImageList.css";
 
 const TitlebarImageList = () => {
     const [furnitureImages, setfurnitureImages] = useState([]);
@@ -49,14 +52,11 @@ const TitlebarImageList = () => {
         setfurnitureImages(newArr);
     };
 
+    const updateFurnitureWithoutImage = () => {};
+
     return (
         <div>
-            <ImageList
-                sx={{
-                    width: "300px",
-                    height: "480px",
-                }}
-            >
+            <ImageList className="image-list">
                 <ImageListItem key="Subheader" cols={2}>
                     <ListSubheader component="div">
                         {furnitureImages.length} furnitures
@@ -115,6 +115,19 @@ const TitlebarImageList = () => {
                                 Remove all images
                             </Button>
                         ) : undefined}
+                        {/* <Button className="uploadWithoutImage">
+                            Upload furniture
+                        </Button> */}
+                        <Popup
+                            trigger={
+                                <Button className="uploadWithoutImage">
+                                    Upload furniture
+                                </Button>
+                            }
+                            position="center"
+                        >
+                            <input />
+                        </Popup>
                     </div>
                 )}
             </ImageUploading>

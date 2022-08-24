@@ -23,11 +23,11 @@ const UserHomePage = (props) => {
             ></UserPrivatePage>
             <UserPublicPage
                 userInfo={props.userInfo}
-                display={editPage}
+                display={publicPage}
             ></UserPublicPage>
             <UserEditPage
                 userInfo={props.userInfo}
-                display={publicPage}
+                display={editPage}
             ></UserEditPage>
         </div>
     );
