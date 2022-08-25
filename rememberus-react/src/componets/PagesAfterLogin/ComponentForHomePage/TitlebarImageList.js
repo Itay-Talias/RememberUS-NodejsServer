@@ -8,24 +8,26 @@ import ImageUploading from "react-images-uploading";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Popup from "reactjs-popup";
+import RadioControl from "./RadioControl.js";
 import "reactjs-popup/dist/index.css";
 import "./TitlebarImageList.css";
 
 const TitlebarImageList = () => {
+    let indexPhoto = 1;
     const [furnitureImages, setfurnitureImages] = useState([]);
 
     const onChangefurnitureImages = (newfurnitureImage) => {
         var temp = {
             img: undefined,
-            key: undefined,
+            key: indexPhoto,
             file: undefined,
             title: undefined,
             flag: true,
         };
+        indexPhoto++;
         temp.img = newfurnitureImage[newfurnitureImage.length - 1].img;
         temp.file = newfurnitureImage[newfurnitureImage.length - 1].file;
         temp.title = temp.file.name;
-        temp.key = newfurnitureImage[newfurnitureImage.length - 1].img;
         newfurnitureImage.pop();
         newfurnitureImage.push(temp);
         setfurnitureImages(newfurnitureImage);
@@ -37,14 +39,14 @@ const TitlebarImageList = () => {
 
     const RemoveImage = (base64) => {
         var filtered = furnitureImages.filter(function (value, index, arr) {
-            return value.img !== base64;
+            return value.key !== base64;
         });
         setfurnitureImages(filtered);
     };
 
-    const ShowImage = (base64) => {
+    const ShowImage = (key) => {
         const newArr = furnitureImages.map((obj) => {
-            if (obj.img === base64) {
+            if (obj.key === key && obj.file) {
                 return { ...obj, flag: !obj.flag };
             }
             return obj;
@@ -52,7 +54,22 @@ const TitlebarImageList = () => {
         setfurnitureImages(newArr);
     };
 
-    const updateFurnitureWithoutImage = () => {};
+    const updateFurnitureWithoutImage = (furnitureValue) => {
+        var temp = {
+            img: undefined,
+            key: indexPhoto,
+            file: undefined,
+            title: undefined,
+            flag: false,
+        };
+        indexPhoto++;
+        temp.file = false;
+        temp.img = require(`../../../Images/furnituresImages/${furnitureValue}.jpg`);
+        temp.title = furnitureValue;
+        furnitureImages.push(temp);
+        console.log(furnitureImages);
+        setfurnitureImages(furnitureImages);
+    };
 
     return (
         <div>
@@ -65,19 +82,19 @@ const TitlebarImageList = () => {
                         <ImageListItem key={item.img}>
                             <img
                                 src={
-                                    item.flag
+                                    item.flag && item.file
                                         ? require(`../../../Images/furnituresImages/${item.title}`)
                                         : `${item.img}`
                                 }
                                 alt={item.title}
                                 loading="lazy"
                                 onClick={() => {
-                                    ShowImage(item.img);
+                                    ShowImage(item.key);
                                 }}
                             />
                             <ImageListItemBar
                                 title={
-                                    item.flag
+                                    item.flag && item.file
                                         ? `Click to see the original ${item.title}`
                                         : `${item.title}`
                                 }
@@ -87,7 +104,7 @@ const TitlebarImageList = () => {
                                             color: "rgba(255, 255, 255, 0.54)",
                                         }}
                                         onClick={() => {
-                                            RemoveImage(item.img);
+                                            RemoveImage(item.key);
                                         }}
                                     >
                                         <DeleteIcon fontSize="inherit" />
@@ -105,7 +122,7 @@ const TitlebarImageList = () => {
                 multiple
             >
                 {({ onImageUpload }) => (
-                    <div>
+                    <div className="btn-UploadRemove">
                         <Button onClick={onImageUpload}>
                             Upload furniture image
                         </Button>
@@ -115,18 +132,19 @@ const TitlebarImageList = () => {
                                 Remove all images
                             </Button>
                         ) : undefined}
-                        {/* <Button className="uploadWithoutImage">
-                            Upload furniture
-                        </Button> */}
                         <Popup
                             trigger={
                                 <Button className="uploadWithoutImage">
                                     Upload furniture
                                 </Button>
                             }
-                            position="center"
+                            position="top center"
                         >
-                            <input />
+                            <RadioControl
+                                addFurnitureHandler={
+                                    updateFurnitureWithoutImage
+                                }
+                            />
                         </Popup>
                     </div>
                 )}
