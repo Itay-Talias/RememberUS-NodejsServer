@@ -7,11 +7,16 @@ import "./background-style.css";
 const UserEditPage = (props) => {
   const [enteredUserName, setEnteredUserName] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [enteredEmail, setEnteredEmail] = useState("");
+
   const UserNameChangeHandler = (event) => {
     setEnteredUserName(event.target.value);
   };
   const PasswordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
+  };
+  const EmailChangeHandler = (event) => {
+    setEnteredEmail(event.target.value);
   };
 
   const ChangeDetailsHandler = () => {
@@ -25,7 +30,7 @@ const UserEditPage = (props) => {
     }
     if (enteredPassword !== "") {
       const newPassword = {
-        password: "123456", //props.userInfo.userName,
+        password: "123456",
         updateField: "password",
         updateData: enteredPassword,
       };
@@ -48,10 +53,10 @@ const UserEditPage = (props) => {
           onChange={PasswordChangeHandler}
         />
         <TextField
-          className="Password"
-          label="Password"
-          value={enteredPassword}
-          onChange={PasswordChangeHandler}
+          className="Email"
+          label="Email"
+          value={enteredEmail}
+          onChange={EmailChangeHandler}
         />
 
         <Button variant="contained" onClick={ChangeDetailsHandler}>
