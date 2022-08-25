@@ -1,100 +1,79 @@
-import { React, useState } from "react";
+import { React, useState, useEffect, useDeferredValue } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import "./UserEditPage.css";
 import "./background-style.css";
+import { SouthAmerica } from "@mui/icons-material";
 
 const UserEditPage = (props) => {
-  const [enteredUserName, setEnteredUserName] = useState("");
-  const [enteredPassword, setEnteredPassword] = useState("");
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [enteredAddress, setEnteredAddress] = useState("");
-  const [enteredGender, setEnteredGender] = useState("");
-  const [enteredPrivacy, setEnteredPrivacy] = useState("");
+  const [UserDetailsObj, setUserDetailsObj] = useState({
+    userName: props.userName,
+    password: props.password,
+    email: props.email,
+    address: props.address,
+    gender: props.gender,
+    privacy: props.privacy,
+  });
 
-  const UserNameChangeHandler = (event) => {
-    setEnteredUserName(event.target.value);
-  };
-  const PasswordChangeHandler = (event) => {
-    setEnteredPassword(event.target.value);
-  };
-  const EmailChangeHandler = (event) => {
-    setEnteredEmail(event.target.value);
-  };
-  const AddressChangeHandler = (event) => {
-    setEnteredAddress(event.target.value);
-  };
-  const GenderChangeHandler = (event) => {
-    setEnteredGender(event.target.value);
-  };
-  const PrivacyChangeHandler = (event) => {
-    setEnteredPrivacy(event.target.value);
+  const handleChange = (e) => {
+    e.preventDefault();
+    const name = e.target;
+    const value = name.value;
+    console.log(name, value);
+    setUserDetailsObj((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const ChangeDetailsHandler = () => {
-    if (enteredUserName !== "") {
-      const newUserName = {
-        userName: "itay", //props.userInfo.userName,
-        updateField: "userName",
-        updateData: enteredUserName,
-      };
-      console.log(newUserName);
-    }
-    if (enteredPassword !== "") {
-      const newPassword = {
-        password: "123456",
-        updateField: "password",
-        updateData: enteredPassword,
-      };
-      console.log(newPassword);
-    }
+    console.log(UserDetailsObj);
   };
   return (
     <div className={props.display ? "continer" : "display-none"}>
-      <div className="login">
-        <TextField
-          className="Username"
-          label="Username"
-          value={enteredUserName}
-          onChange={UserNameChangeHandler}
+      <form className="login">
+        <input
+          placeholder="username"
+          name="userName"
+          onChange={handleChange}
+          defaultValue={UserDetailsObj.userName}
         />
-        <TextField
-          className="Password"
-          label="Password"
-          value={enteredPassword}
-          onChange={PasswordChangeHandler}
+        <input
+          placeholder="password"
+          name="password"
+          onChange={handleChange}
+          defaultValue={UserDetailsObj.password}
         />
-        <TextField
-          className="Email"
-          label="Email"
-          value={enteredEmail}
-          onChange={EmailChangeHandler}
+        <input
+          placeholder="email"
+          name="email"
+          onChange={handleChange}
+          defaultValue={UserDetailsObj.email}
         />
-        <TextField
-          className="Address"
-          label="Address"
-          value={enteredAddress}
-          onChange={AddressChangeHandler}
+        <input
+          placeholder="address"
+          name="address"
+          onChange={handleChange}
+          defaultValue={UserDetailsObj.address}
         />
-        <TextField
-          className="Gender"
-          label="Gender"
-          value={enteredGender}
-          onChange={GenderChangeHandler}
+        <input
+          placeholder="gender"
+          name="gender"
+          onChange={handleChange}
+          defaultValue={UserDetailsObj.gender}
         />
-        <TextField
-          className="Privacy"
-          label="Privacy"
-          value={enteredPrivacy}
-          onChange={PrivacyChangeHandler}
+        <input
+          placeholder="privacy"
+          name="privacy"
+          onChange={handleChange}
+          defaultValue={UserDetailsObj.privacy}
         />
 
         <Button variant="contained" onClick={ChangeDetailsHandler}>
           Change Details
         </Button>
-      </div>
+      </form>
     </div>
   );
 };
-
 export default UserEditPage;
