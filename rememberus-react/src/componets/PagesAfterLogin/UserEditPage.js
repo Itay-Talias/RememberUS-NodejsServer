@@ -8,6 +8,9 @@ const UserEditPage = (props) => {
   const [enteredUserName, setEnteredUserName] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
+  const [enteredAddress, setEnteredAddress] = useState("");
+  const [enteredGender, setEnteredGender] = useState("");
+  const [enteredPrivacy, setEnteredPrivacy] = useState("");
 
   const UserNameChangeHandler = (event) => {
     setEnteredUserName(event.target.value);
@@ -17,6 +20,15 @@ const UserEditPage = (props) => {
   };
   const EmailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
+  };
+  const AddressChangeHandler = (event) => {
+    setEnteredAddress(event.target.value);
+  };
+  const GenderChangeHandler = (event) => {
+    setEnteredGender(event.target.value);
+  };
+  const PrivacyChangeHandler = (event) => {
+    setEnteredPrivacy(event.target.value);
   };
 
   const ChangeDetailsHandler = () => {
@@ -57,6 +69,24 @@ const UserEditPage = (props) => {
           label="Email"
           value={enteredEmail}
           onChange={EmailChangeHandler}
+        />
+        <TextField
+          className="Address"
+          label="Address"
+          value={enteredAddress}
+          onChange={AddressChangeHandler}
+        />
+        <TextField
+          className="Gender"
+          label="Gender"
+          value={enteredGender}
+          onChange={GenderChangeHandler}
+        />
+        <TextField
+          className="Privacy"
+          label="Privacy"
+          value={enteredPrivacy}
+          onChange={PrivacyChangeHandler}
         />
 
         <Button variant="contained" onClick={ChangeDetailsHandler}>
