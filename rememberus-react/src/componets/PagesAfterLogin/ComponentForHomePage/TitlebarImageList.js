@@ -67,7 +67,6 @@ const TitlebarImageList = () => {
         temp.img = require(`../../../Images/furnituresImages/${furnitureValue}.jpg`);
         temp.title = furnitureValue;
         furnitureImages.push(temp);
-        console.log(furnitureImages);
         setfurnitureImages(furnitureImages);
     };
 
@@ -92,6 +91,7 @@ const TitlebarImageList = () => {
                                     ShowImage(item.key);
                                 }}
                             />
+                            {console.log("hoo")}
                             <ImageListItemBar
                                 title={
                                     item.flag && item.file
@@ -116,6 +116,7 @@ const TitlebarImageList = () => {
                 </ImageListItem>
             </ImageList>
             <ImageUploading
+                id="img-upl"
                 value={furnitureImages}
                 onChange={onChangefurnitureImages}
                 dataURLKey="img"
@@ -144,6 +145,7 @@ const TitlebarImageList = () => {
                                 addFurnitureHandler={
                                     updateFurnitureWithoutImage
                                 }
+                                onImageUpload={onImageUpload}
                             />
                         </Popup>
                     </div>

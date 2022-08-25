@@ -12,16 +12,17 @@ const RadioControl = (props) => {
         setfurnitureValue(event.target.value);
     };
     const handleUploadClick = () => {
+        props.onImageUpload();
         props.addFurnitureHandler(furnitureValue);
     };
     return (
         <FormControl>
-            <FormLabel id="demo-row-radio-buttons-group-label">
-                Please choose furniture
+            <FormLabel id="row-radio-buttons-group-label">
+                Please chose furniture
             </FormLabel>
             <RadioGroup
                 row
-                aria-labelledby="demo-row-radio-buttons-group-label"
+                aria-labelledby="row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
                 onChange={handlefurnitureValueChange}
             >

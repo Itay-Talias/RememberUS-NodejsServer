@@ -1,10 +1,10 @@
-.continer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.continerEditPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.login {
-  display: grid;
-  align-items: center;
-  justify-content: center;
+.loginEditPage {
+    display: grid;
+    align-items: center;
+    justify-content: center;
 }
