@@ -1,8 +1,7 @@
 import { React, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-//import "./UserEditPage.css";
-
+import "./UserEditPage.css";
 import "./background-style.css";
 
 const UserEditPage = (props) => {
@@ -35,25 +34,29 @@ const UserEditPage = (props) => {
   };
   return (
     <div className={props.display ? "continer" : "display-none"}>
-      <div>
+      <div className="login">
         <TextField
           className="Username"
           label="Username"
           value={enteredUserName}
           onChange={UserNameChangeHandler}
         />
-
-        <Button variant="contained" onClick={ChangeDetailsHandler}>
-          Change Details
-        </Button>
-      </div>
-      <div>
         <TextField
           className="Password"
           label="Password"
           value={enteredPassword}
           onChange={PasswordChangeHandler}
         />
+        <TextField
+          className="Password"
+          label="Password"
+          value={enteredPassword}
+          onChange={PasswordChangeHandler}
+        />
+
+        <Button variant="contained" onClick={ChangeDetailsHandler}>
+          Change Details
+        </Button>
       </div>
     </div>
   );
