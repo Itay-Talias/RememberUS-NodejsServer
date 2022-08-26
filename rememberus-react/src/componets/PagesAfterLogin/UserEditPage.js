@@ -1,7 +1,11 @@
 import { React, useState } from "react";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 import "./UserEditPage.css";
 import "./background-style.css";
+
+const privacy = ["True", "False"];
 
 const UserEditPage = (props) => {
     const [UserDetailsObj, setUserDetailsObj] = useState({
@@ -28,49 +32,56 @@ const UserEditPage = (props) => {
         console.log(UserDetailsObj);
     };
     return (
-        <div
-            className={
-                props.display ? "continer continerEditPage" : "display-none"
-            }
-        >
+        <div className={props.display ? "continer" : "display-none"}>
             <form className="loginEditPage">
-                <input
+                <TextField
+                    className="detaile"
                     placeholder="username"
                     name="userName"
                     onChange={handleChange}
                     defaultValue={UserDetailsObj.userName}
                 />
-                <input
+                <TextField
+                    className="detaile"
                     placeholder="password"
                     name="password"
                     onChange={handleChange}
                     defaultValue={UserDetailsObj.password}
                 />
-                <input
+                <TextField
                     placeholder="email"
                     name="email"
                     onChange={handleChange}
                     defaultValue={UserDetailsObj.email}
                 />
-                <input
+                <TextField
+                    className="detaile"
                     placeholder="address"
                     name="address"
                     onChange={handleChange}
                     defaultValue={UserDetailsObj.address}
                 />
-                <input
+                <TextField
+                    className="detaile"
                     placeholder="gender"
                     name="gender"
                     onChange={handleChange}
                     defaultValue={UserDetailsObj.gender}
                 />
-                <input
-                    placeholder="privacy"
-                    name="privacy"
+                <TextField
+                    className="detaile"
+                    id="select"
+                    select
+                    label="Privacy"
+                    value={UserDetailsObj.privacy}
                     onChange={handleChange}
-                    defaultValue={UserDetailsObj.privacy}
-                />
-
+                >
+                    {privacy.map((option) => (
+                        <MenuItem key={option} value={option}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <Button variant="contained" onClick={ChangeDetailsHandler}>
                     Change Details
                 </Button>

@@ -1,10 +1,17 @@
-.continerEditPage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 .loginEditPage {
     display: grid;
     align-items: center;
     justify-content: center;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.detaile {
+    display: grid;
+    height: 80px;
+    align-content: center;
+    justify-content: center;
+    font-style: oblique;
+    border-radius: 4px;
 }
