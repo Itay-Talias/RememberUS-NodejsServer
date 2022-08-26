@@ -12,7 +12,6 @@ const RadioControl = (props) => {
         setfurnitureValue(event.target.value);
     };
     const handleUploadClick = () => {
-        props.onImageUpload();
         props.addFurnitureHandler(furnitureValue);
     };
     return (

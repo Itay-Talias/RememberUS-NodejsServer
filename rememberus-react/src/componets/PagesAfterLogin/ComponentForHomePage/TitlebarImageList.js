@@ -13,18 +13,16 @@ import "reactjs-popup/dist/index.css";
 import "./TitlebarImageList.css";
 
 const TitlebarImageList = () => {
-    let indexPhoto = 1;
     const [furnitureImages, setfurnitureImages] = useState([]);
 
     const onChangefurnitureImages = (newfurnitureImage) => {
-        var temp = {
+        let temp = {
             img: undefined,
-            key: indexPhoto,
+            key: furnitureImages.length + 1,
             file: undefined,
             title: undefined,
             flag: true,
         };
-        indexPhoto++;
         temp.img = newfurnitureImage[newfurnitureImage.length - 1].img;
         temp.file = newfurnitureImage[newfurnitureImage.length - 1].file;
         temp.title = temp.file.name;
@@ -38,7 +36,7 @@ const TitlebarImageList = () => {
     };
 
     const RemoveImage = (base64) => {
-        var filtered = furnitureImages.filter(function (value, index, arr) {
+        let filtered = furnitureImages.filter(function (value) {
             return value.key !== base64;
         });
         setfurnitureImages(filtered);
@@ -55,21 +53,19 @@ const TitlebarImageList = () => {
     };
 
     const updateFurnitureWithoutImage = (furnitureValue) => {
-        var temp = {
+        let temp = {
             img: undefined,
-            key: indexPhoto,
+            key: furnitureImages.length + 1,
             file: undefined,
             title: undefined,
             flag: false,
         };
-        indexPhoto++;
         temp.file = false;
         temp.img = require(`../../../Images/furnituresImages/${furnitureValue}.jpg`);
         temp.title = furnitureValue;
-        furnitureImages.push(temp);
-        setfurnitureImages(furnitureImages);
+        const newfurnitureArr = [...furnitureImages, temp];
+        setfurnitureImages(newfurnitureArr);
     };
-
     return (
         <div>
             <ImageList className="image-list">
@@ -145,7 +141,6 @@ const TitlebarImageList = () => {
                                 addFurnitureHandler={
                                     updateFurnitureWithoutImage
                                 }
-                                onImageUpload={onImageUpload}
                             />
                         </Popup>
                     </div>
