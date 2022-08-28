@@ -35,9 +35,9 @@ const TitlebarImageList = (props) => {
         //remove the furniture array from the server
     };
 
-    const RemoveImage = (base64) => {
+    const RemoveImage = (key) => {
         let filtered = furnitureImages.filter(function (value) {
-            return value.key !== base64;
+            return value.key !== key;
         });
         //remove specific image from array
         setfurnitureImages(filtered);

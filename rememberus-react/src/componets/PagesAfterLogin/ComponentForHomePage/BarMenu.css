@@ -14,6 +14,7 @@
 .nav-item {
     display: grid;
     align-content: center;
+    justify-content: space-around;
     color: black;
     height: 100%;
 }

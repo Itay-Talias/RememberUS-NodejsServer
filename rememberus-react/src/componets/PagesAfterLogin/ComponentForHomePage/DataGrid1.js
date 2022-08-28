@@ -39,9 +39,14 @@ const rows = [
 ];
 
 const DataGrid1 = (props) => {
+    const foo = () => {
+        console.log("clicked");
+    };
+
     return (
         <Box sx={{ height: 500, width: "100%" }}>
             <DataGrid
+                onClick={foo()}
                 rows={rows}
                 columns={columns}
                 pageSize={8}

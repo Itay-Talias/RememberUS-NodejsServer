@@ -8,10 +8,10 @@ const ML = require(path.join(
     "../../../ML-python/ImageDecoding.ML-python"
 ));
 
-pythonServerRouter.get("/send_photo_to_python_server", async (req, res) => {
-    res.send(await ML.sendImageDecode("../public/Images/di.jpg"));
-});
+// pythonServerRouter.get("/send_photo_to_python_server", async (req, res) => {
+//     res.send(await ML.sendImageDecode("../public/Images/di.jpg"));
+// });
 
-pythonServerRouter.get("/send_photo_to_python_server", async (req, res) => {
-    res.send(await ML.sendBase64Decode()); //get base64 from the front
+pythonServerRouter.post("/send_photo_to_python_server", async (req, res) => {
+    res.send(await ML.sendBase64Decode(req.data.base64)); //get base64 from the front
 });
