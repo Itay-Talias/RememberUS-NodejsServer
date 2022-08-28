@@ -8,6 +8,7 @@ import "./background-style.css";
 const privacy = ["True", "False"];
 
 const UserEditPage = (props) => {
+    //update the server on edit user
     const [UserDetailsObj, setUserDetailsObj] = useState({
         userName: props.userName,
         password: props.password,

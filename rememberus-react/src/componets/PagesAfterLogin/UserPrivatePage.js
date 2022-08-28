@@ -10,7 +10,7 @@ import axios from "axios";
 const UserPrivatePage = (props) => {
     // console.log(props.userInfo);
 
-    const [floorPlanImage, setFloorPlanImage] = useState([]);
+    const [floorPlanImage, setFloorPlanImage] = useState([]); //get floor plan from props!!
     const onChangeFoorPlan = (newFloorPlanImage) => {
         // if (floorPlanImage.length === 0) {
         //     axios
@@ -37,6 +37,7 @@ const UserPrivatePage = (props) => {
         //         });
         // }
         setFloorPlanImage(newFloorPlanImage);
+        //set the floorplan of the user in server
     };
     return (
         <div className={props.display ? "continer" : "display-none"}>

@@ -12,33 +12,34 @@ import RadioControl from "./RadioControl.js";
 import "reactjs-popup/dist/index.css";
 import "./TitlebarImageList.css";
 
-const TitlebarImageList = () => {
-    const [furnitureImages, setfurnitureImages] = useState([]);
+const TitlebarImageList = (props) => {
+    const [furnitureImages, setfurnitureImages] = useState([]); //get the fernture array using props!!
 
     const onChangefurnitureImages = (newfurnitureImage) => {
         let temp = {
-            img: undefined,
+            img: newfurnitureImage[newfurnitureImage.length - 1].img,
             key: furnitureImages.length + 1,
-            file: undefined,
+            file: newfurnitureImage[newfurnitureImage.length - 1].file,
             title: undefined,
             flag: true,
         };
-        temp.img = newfurnitureImage[newfurnitureImage.length - 1].img;
-        temp.file = newfurnitureImage[newfurnitureImage.length - 1].file;
-        temp.title = temp.file.name;
+        temp.title = "sofa"; //send requst to pythonServerRouter.get("/send_photo_to_python_server" and get furniture
         newfurnitureImage.pop();
         newfurnitureImage.push(temp);
+        // add temp furniture to array to server
         setfurnitureImages(newfurnitureImage);
     };
 
     const RemoveAllImages = () => {
         setfurnitureImages([]);
+        //remove the furniture array from the server
     };
 
     const RemoveImage = (base64) => {
         let filtered = furnitureImages.filter(function (value) {
             return value.key !== base64;
         });
+        //remove specific image from array
         setfurnitureImages(filtered);
     };
 
@@ -54,16 +55,14 @@ const TitlebarImageList = () => {
 
     const updateFurnitureWithoutImage = (furnitureValue) => {
         let temp = {
-            img: undefined,
+            img: require(`../../../Images/furnituresImages/${furnitureValue}.jpg`),
             key: furnitureImages.length + 1,
-            file: undefined,
-            title: undefined,
+            file: false,
+            title: furnitureValue,
             flag: false,
         };
-        temp.file = false;
-        temp.img = require(`../../../Images/furnituresImages/${furnitureValue}.jpg`);
-        temp.title = furnitureValue;
         const newfurnitureArr = [...furnitureImages, temp];
+        // add temp furniture to array withoutimage
         setfurnitureImages(newfurnitureArr);
     };
     return (
@@ -78,7 +77,7 @@ const TitlebarImageList = () => {
                             <img
                                 src={
                                     item.flag && item.file
-                                        ? require(`../../../Images/furnituresImages/${item.title}`)
+                                        ? require(`../../../Images/furnituresImages/${item.title}.jpg`)
                                         : `${item.img}`
                                 }
                                 alt={item.title}
