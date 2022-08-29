@@ -10,13 +10,6 @@ const UserHomePage = (props) => {
   const [privatePage, setPrivatePage] = useState(true);
   const [publicPage, setPublicPage] = useState(false);
   const [editPage, setEditPage] = useState(false);
-  //in react for changing object during running we need to "latof" the change state function in that function
-  const [loggedInUser, setLoggedInUser] = useState(props.userInfo);
-  const onLoggedUser = (userInfo) => {
-    setLoggedInUser((prev) => {
-      return userInfo;
-    });
-  };
 
   return (
     <div>
@@ -24,21 +17,21 @@ const UserHomePage = (props) => {
         nonePrivatePage={setPrivatePage}
         nonePublicPage={setPublicPage}
         noneEditPage={setEditPage}
-        userInfo={loggedInUser}
+        userInfo={props.userInfo}
       ></BarMenu>
       <UserPrivatePage
-        userInfo={loggedInUser}
-        changeUserInfo={onLoggedUser}
+        userInfo={props.userInfo}
+        changeUserInfo={props.changeUserInfo}
         display={privatePage}
       ></UserPrivatePage>
       <UserPublicPage
-        userInfo={loggedInUser}
-        changeUserInfo={onLoggedUser}
+        userInfo={props.userInfo}
+        changeUserInfo={props.changeUserInfo}
         display={publicPage}
       ></UserPublicPage>
       <UserEditPage
-        userInfo={loggedInUser}
-        changeUserInfo={onLoggedUser}
+        userInfo={props.userInfo}
+        changeUserInfo={props.changeUserInfo}
         display={editPage}
         nonePrivatePage={setPrivatePage}
         noneEditPage={setEditPage}

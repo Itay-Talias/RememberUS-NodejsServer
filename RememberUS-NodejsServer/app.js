@@ -2,6 +2,7 @@ const express = require("express");
 const apiRouter = require(`${__dirname}/routes/apiPath`); //apiRouter= router from apiPage
 const path = require("path");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const app = express();
 const port = 4000;
@@ -14,7 +15,8 @@ app.listen(port, async () => {
   await logicManager.ConnectToMongoDB();
   console.log("Server is Ready !!!");
 });
-
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
 
 app.use(cors());

@@ -8,10 +8,15 @@ import TitlebarImageList from "./ComponentForHomePage/TitlebarImageList";
 import axios from "axios";
 
 const UserPrivatePage = (props) => {
-  console.log(props.userInfo.forPlanArray[0]);
+  console.log(props.userInfo);
   const [floorPlanImage, setFloorPlanImage] = useState([]);
+  // if (props.userInfo.forPlanArray.length !== 0) {
+  //   setFloorPlanImage(props.userInfo.forPlanArray[0].forPlanImageInBase64);
+  // }
 
   const onChangeFoorPlan = (newFloorPlanImage) => {
+    //console.log(props.userInfo.forPlanArray[0]);
+    //let temp = [{ data_url: newFloorPlanImage[0].data_url }];
     setFloorPlanImage(newFloorPlanImage); //Show floorPlan
     //console.log("------------");
     // console.log(newFloorPlanImage[0].data_url);
@@ -19,7 +24,7 @@ const UserPrivatePage = (props) => {
     axios
       .post(`http://localhost:4000/api/v1/User/AddNewForPlanImage`, {
         userName: props.userInfo.userName,
-        forPlanImageInBase64: floorPlanImage,
+        forPlanImageInBase64: newFloorPlanImage,
       })
       .then((res) => {
         //props.changeUserInfo(res.data.info);
