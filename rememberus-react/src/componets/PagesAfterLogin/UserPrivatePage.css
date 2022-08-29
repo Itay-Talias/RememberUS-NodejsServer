@@ -1,5 +1,3 @@
-
-
 .floorPlan {
     position: relative;
     width: 70%;
@@ -11,17 +9,12 @@
 .Removebtn {
     left: 0;
     top: 120px;
+    width: 30px;
 }
 
 .Uploadbtn {
     left: 40%;
     margin-top: 2%;
-}
-
-.Logo-div {
-    display: inline-block;
-    position: absolute;
-    right: 3%;
 }
 
 .Images-bar {

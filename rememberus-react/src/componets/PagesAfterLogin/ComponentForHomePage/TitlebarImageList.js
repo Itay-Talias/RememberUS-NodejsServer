@@ -86,7 +86,6 @@ const TitlebarImageList = (props) => {
                                     ShowImage(item.key);
                                 }}
                             />
-                            {console.log("hoo")}
                             <ImageListItemBar
                                 title={
                                     item.flag && item.file
