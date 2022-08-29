@@ -12,7 +12,7 @@ const LoggedInUserInfo = (props) => {
             <h3>
                 Hello, {userIsMale ? "Mr." : "Ms."} {props.name}
             </h3>
-            <h3>Adress: {props.street}</h3>
+            <h3>Address: {props.street}</h3>
         </div>
     );
 };

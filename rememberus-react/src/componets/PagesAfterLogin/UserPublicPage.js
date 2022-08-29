@@ -1,12 +1,29 @@
 import { React, useState } from "react";
 import "./background-style.css";
-import DataGrid1 from "./ComponentForHomePage/DataGrid1.js";
+import UsersList from "./ComponentForHomePage/UsersList.js";
+import PublicModal from "./ComponentForHomePage/PublicModal";
 
 const UserPublicPage = (props) => {
-    // get all public user
+    const [user, setUser] = useState({});
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const openModelWithUser = (userFromList) => {
+        console.log(userFromList);
+        handleOpen();
+        setUser(userFromList);
+    };
     return (
         <div className={props.display ? "continer" : "display-none"}>
-            <DataGrid1></DataGrid1>
+            <UsersList onClickUser={openModelWithUser}></UsersList>
+            <PublicModal
+                open={open}
+                handelOpen={handleOpen}
+                handleClose={handleClose}
+                user={user}
+            ></PublicModal>
         </div>
     );
 };

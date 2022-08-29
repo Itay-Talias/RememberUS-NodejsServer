@@ -1,0 +1,19 @@
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    background-color: white;
+    border: 2px solid #000;
+}
+
+.img-model {
+    height: 100px;
+}
+
+.bar-model {
+    height: 400px;
+    position: relative;
+    right: 2%;
+}
