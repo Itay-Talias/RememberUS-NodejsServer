@@ -502,6 +502,33 @@ async function ChangeFurnitureTypeByFurnitureIndexAndFloorPlanIndexOfExistUser(
   }
 }
 
+async function UpdateUser(LoginUserName, newFields) {
+  const user = await MongoDBManager.IsuserNameExist(newFields.userName);
+  if (LoginUserName === newFields.userName || user === null) {
+    let user = await MongoDBManager.IsuserNameExist(LoginUserName);
+    await MongoDBManager.DeleteExistPersonFromDB(LoginUserName);
+    const updatedPerson = createPersonFromDBDocument(user);
+    updatedPerson.changeFirstName(newFields.firstName);
+    updatedPerson.changeLastName(newFields.lastName);
+    updatedPerson.changeUserName(newFields.userName);
+    updatedPerson.changePassword(newFields.password);
+    updatedPerson.changeEmail(newFields.email);
+    updatedPerson.changeAdress(newFields.adress);
+    updatedPerson.changeGender(newFields.gender);
+    updatedPerson.changePersonPrivacy(newFields.personPrivacy);
+
+    await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+
+    //Always succssed beacuse we send all the detals from the front
+    return { Status: "Edit succssed", userInfo: updatedPerson };
+  } else if (LoginUserName != newFields.userName) {
+    return {
+      Status: "Edit Failed",
+      Reason: "Cant change userName, that userName already taken",
+    };
+  }
+}
+
 async function UpdateExistUserDetail(userName, updateField, updateData) {
   if (!userName) {
     return {
@@ -713,4 +740,5 @@ module.exports = {
   getPersonDocumentByHisPrivacy: getPersonDocumentByHisPrivacy,
   LikeFloorPlanByUserName: LikeFloorPlanByUserName,
   DislikeFloorPlanByUserName: DislikeFloorPlanByUserName,
+  UpdateUser: UpdateUser,
 };

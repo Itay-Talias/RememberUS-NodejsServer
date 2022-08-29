@@ -4,90 +4,188 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import "./UserEditPage.css";
 import "./background-style.css";
+import axios from "axios";
+import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
 
 const privacy = ["True", "False"];
+const genders = ["Male", "Female"];
 
 const UserEditPage = (props) => {
-    //update the server on edit user
-    const [UserDetailsObj, setUserDetailsObj] = useState({
-        userName: props.userName,
-        password: props.password,
-        email: props.email,
-        address: props.address,
-        gender: props.gender,
-        privacy: props.privacy,
-    });
+  const [newFirstName, setNewFirstName] = useState(props.userInfo.firstName);
+  const [newLastName, setNewLastName] = useState(props.userInfo.lastName);
+  const [newUserName, setNewUserName] = useState(props.userInfo.userName);
+  const [newPassword, setNewPassword] = useState(props.userInfo.password);
+  const [newEmail, setNewEmail] = useState(props.userInfo.email);
+  const [newAdress, setNewAdress] = useState(props.userInfo.adress);
+  const [newGender, setNewGender] = useState(props.userInfo.gender);
+  const [newPersonPrivacy, setNewUserPersonPrivacy] = useState(
+    props.userInfo.personPrivacy
+  );
+  const [needErrorMsg, setNeedErrorMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-    const handleChange = (e) => {
-        e.preventDefault();
-        const name = e.target;
-        const value = name.value;
-        console.log(name, value);
-        setUserDetailsObj((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
+  const handleChange = (e) => {
+    setNeedErrorMsg(false);
+    e.preventDefault();
+    switch (e.target.name) {
+      case "firstName": {
+        setNewFirstName(e.target.value);
+        break;
+      }
+      case "lastName": {
+        setNewLastName(e.target.value);
+        break;
+      }
+      case "userName": {
+        setNewUserName(e.target.value);
+        break;
+      }
+      case "password": {
+        setNewPassword(e.target.value);
+        break;
+      }
+      case "email": {
+        setNewEmail(e.target.value);
+        break;
+      }
+      case "address": {
+        setNewAdress(e.target.value);
+        break;
+      }
+    }
+  };
 
-    const ChangeDetailsHandler = () => {
-        console.log(UserDetailsObj);
+  const PrivacyChange = (e) => {
+    e.preventDefault();
+    setNewUserPersonPrivacy(e.target.value);
+  };
+
+  const GenderChange = (e) => {
+    e.preventDefault();
+    setNewGender(e.target.value);
+  };
+
+  const ChangeDetailsHandler = () => {
+    const newUserDetails = {
+      firstName: newFirstName,
+      lastName: newLastName,
+      userName: newUserName,
+      password: newPassword,
+      email: newEmail,
+      adress: newAdress,
+      gender: newGender,
+      personPrivacy: newPersonPrivacy,
     };
-    return (
-        <div className={props.display ? "continer" : "display-none"}>
-            <form className="loginEditPage">
-                <TextField
-                    className="detaile"
-                    placeholder="username"
-                    name="userName"
-                    onChange={handleChange}
-                    defaultValue={UserDetailsObj.userName}
-                />
-                <TextField
-                    className="detaile"
-                    placeholder="password"
-                    name="password"
-                    onChange={handleChange}
-                    defaultValue={UserDetailsObj.password}
-                />
-                <TextField
-                    placeholder="email"
-                    name="email"
-                    onChange={handleChange}
-                    defaultValue={UserDetailsObj.email}
-                />
-                <TextField
-                    className="detaile"
-                    placeholder="address"
-                    name="address"
-                    onChange={handleChange}
-                    defaultValue={UserDetailsObj.address}
-                />
-                <TextField
-                    className="detaile"
-                    placeholder="gender"
-                    name="gender"
-                    onChange={handleChange}
-                    defaultValue={UserDetailsObj.gender}
-                />
-                <TextField
-                    className="detaile"
-                    id="select"
-                    select
-                    label="Privacy"
-                    value={UserDetailsObj.privacy}
-                    onChange={handleChange}
-                >
-                    {privacy.map((option) => (
-                        <MenuItem key={option} value={option}>
-                            {option}
-                        </MenuItem>
-                    ))}
-                </TextField>
-                <Button variant="contained" onClick={ChangeDetailsHandler}>
-                    Change Details
-                </Button>
-            </form>
+    axios
+      .post(`http://localhost:4000/api/v1/User/EditUserDetails`, {
+        userName: props.userInfo.userName,
+        newUser: newUserDetails,
+      })
+      .then((res) => {
+        if (res.data.Status === "Edit succssed") {
+          props.changeUserInfo(res.data.userInfo);
+          props.nonePrivatePage(true);
+          props.noneEditPage(false);
+        } else {
+          setErrorMsg(res.data.Reason);
+          setNeedErrorMsg(true);
+        }
+      });
+  };
+  return (
+    <div className={props.display ? "continer" : "display-none"}>
+      <form className="loginEditPage">
+        <Box className="edit-Form">
+          <TextField
+            className="detaile"
+            placeholder="firstname"
+            label="firstName"
+            name="firstName"
+            onChange={handleChange}
+            defaultValue={newFirstName}
+          />
+          <TextField
+            className="detaile"
+            placeholder="lastname"
+            label="lastName"
+            name="lastName"
+            onChange={handleChange}
+            defaultValue={newLastName}
+          />
+          <TextField
+            className="detaile"
+            placeholder="username"
+            label="userName"
+            name="userName"
+            onChange={handleChange}
+            defaultValue={newUserName}
+          />
+          <TextField
+            className="detaile"
+            placeholder="password"
+            label="Password"
+            name="password"
+            onChange={handleChange}
+            defaultValue={newPassword}
+          />
+          <TextField
+            className="detaile"
+            placeholder="email"
+            label="Email"
+            name="email"
+            onChange={handleChange}
+            defaultValue={newEmail}
+          />
+          <TextField
+            className="detaile"
+            placeholder="address"
+            name="address"
+            label="Adress"
+            onChange={handleChange}
+            defaultValue={newAdress}
+          />
+          <TextField
+            className="detaile"
+            id="select"
+            select
+            label="Gender"
+            value={newGender}
+            onChange={GenderChange}
+          >
+            {genders.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            className="detaile"
+            id="select"
+            select
+            label="Privacy"
+            value={newPersonPrivacy}
+            onChange={PrivacyChange}
+          >
+            {privacy.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button
+            className={"ConfirmEdit-But"}
+            variant="contained"
+            onClick={ChangeDetailsHandler}
+          >
+            Change Details
+          </Button>
+        </Box>
+        <div>
+          {needErrorMsg ? <Alert severity="error">{errorMsg}</Alert> : null}
         </div>
-    );
+      </form>
+    </div>
+  );
 };
 export default UserEditPage;
