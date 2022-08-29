@@ -32,7 +32,8 @@ UserRouter.post("/SignUp", async (req, res) => {
 });
 
 //when using /api/v1/User/Delete (must send userName)
-UserRouter.delete("/Delete", async (req, res) => {
+UserRouter.post("/Delete", async (req, res) => {
+  console.log(req.body);
   res.send(await LogicManager.DeletingAccount(req.body.userName));
 });
 
@@ -45,6 +46,11 @@ UserRouter.post("/ChangePassword", async (req, res) => {
       req.body.newPassword
     )
   );
+});
+
+//Edit user Details
+UserRouter.post("/EditUserDetails", async (req, res) => {
+  res.send(await LogicManager.UpdateUser(req.body.userName, req.body.newUser));
 });
 
 ////when using /api/v1/User/AddForPlanImage (must send userName and forplanimagebase64)
