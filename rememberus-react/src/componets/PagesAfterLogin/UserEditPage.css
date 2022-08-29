@@ -31,7 +31,7 @@
     margin-right: 1rem;
 }
 
-.continer button {
+/* .ConfirmEdit-But {
     font-variant-east-asian: JIS83;
     font: bold;
     cursor: pointer;
@@ -41,7 +41,7 @@
     color: white;
     border-radius: 12px;
     font-size: 8px;
-}
+} */
 
 @media (max-width: 1400px) {
     .edit-Form {

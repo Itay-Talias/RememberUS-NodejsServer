@@ -173,7 +173,7 @@ const UserEditPage = (props) => {
                     ))}
                 </TextField>
                 <Button
-                    className={"ConfirmEdit-But"}
+                    className="ConfirmEdit-But"
                     variant="contained"
                     onClick={ChangeDetailsHandler}
                 >
