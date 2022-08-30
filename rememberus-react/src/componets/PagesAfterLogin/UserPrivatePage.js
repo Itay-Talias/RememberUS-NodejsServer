@@ -8,29 +8,31 @@ import TitlebarImageList from "./ComponentForHomePage/TitlebarImageList";
 import axios from "axios";
 
 const UserPrivatePage = (props) => {
-  console.log(props.userInfo);
-  const [floorPlanImage, setFloorPlanImage] = useState([]);
-  // if (props.userInfo.forPlanArray.length !== 0) {
-  //   setFloorPlanImage(props.userInfo.forPlanArray[0].forPlanImageInBase64);
-  // }
+    let temp;
+    const [floorPlanImage, setFloorPlanImage] = useState([]);
+    if (props.userInfo.forPlanArray[0].forPlanImangeBase64.length !== 0) {
+        temp = [
+            {
+                data_url:
+                    props.userInfo.forPlanArray[0].forPlanImangeBase64[0]
+                        .data_url,
+            },
+        ];
+    }
 
-  const onChangeFoorPlan = (newFloorPlanImage) => {
-    //console.log(props.userInfo.forPlanArray[0]);
-    //let temp = [{ data_url: newFloorPlanImage[0].data_url }];
-    setFloorPlanImage(newFloorPlanImage); //Show floorPlan
-    //console.log("------------");
-    // console.log(newFloorPlanImage[0].data_url);
-    //console.log(floorPlanImage);
-    axios
-      .post(`http://localhost:4000/api/v1/User/AddNewForPlanImage`, {
-        userName: props.userInfo.userName,
-        forPlanImageInBase64: newFloorPlanImage,
-      })
-      .then((res) => {
-        //props.changeUserInfo(res.data.info);
-      });
-  };
+    const onChangeFoorPlan = (newFloorPlanImage) => {
+        setFloorPlanImage(newFloorPlanImage); //Show floorPlan
+        setFloorPlanImage(temp); //Show floorPlan
 
+        axios
+            .post(`http://localhost:4000/api/v1/User/AddNewForPlanImage`, {
+                userName: props.userInfo.userName,
+                forPlanImageInBase64: newFloorPlanImage,
+            })
+            .then((res) => {
+                //props.changeUserInfo(res.data.info);
+            });
+    };
 
     return (
         <div className={props.display ? "continer" : "display-none"}>
