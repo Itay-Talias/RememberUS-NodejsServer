@@ -8,21 +8,12 @@ import TitlebarImageList from "./ComponentForHomePage/TitlebarImageList";
 import axios from "axios";
 
 const UserPrivatePage = (props) => {
-    let temp;
-    const [floorPlanImage, setFloorPlanImage] = useState([]);
-    if (props.userInfo.forPlanArray[0].forPlanImangeBase64.length !== 0) {
-        temp = [
-            {
-                data_url:
-                    props.userInfo.forPlanArray[0].forPlanImangeBase64[0]
-                        .data_url,
-            },
-        ];
-    }
+    const [floorPlanImage, setFloorPlanImage] = useState(
+        props?.userInfo?.forPlanArray[0]?.forPlanImangeBase64 || []
+    );
 
     const onChangeFoorPlan = (newFloorPlanImage) => {
         setFloorPlanImage(newFloorPlanImage); //Show floorPlan
-        setFloorPlanImage(temp); //Show floorPlan
 
         axios
             .post(`http://localhost:4000/api/v1/User/AddNewForPlanImage`, {
