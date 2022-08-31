@@ -152,3 +152,7 @@ UserRouter.post("/Dislike", async (req, res) => {
     )
   );
 });
+
+UserRouter.get("/BringAllPublicUser", async (req, res) => {
+  res.send(await LogicManager.GetAllPublicUsers());
+});
