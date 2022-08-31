@@ -7,7 +7,7 @@ import Start from "./componets/PagesBeforeLogin/Components/Start";
 import UserHomePage from "./componets/PagesAfterLogin/UserHomePage";
 
 export const UserContext = createContext();
-////
+
 function App() {
   const [LoggedUser, setLoggedUser] = useState({});
   //in react for changing object during running we need to "latof" the change state function in that function
