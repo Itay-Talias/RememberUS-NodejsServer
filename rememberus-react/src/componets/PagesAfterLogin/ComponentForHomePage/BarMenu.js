@@ -16,6 +16,18 @@ const BarMenu = (props) => {
         props.nonePublicPage(true);
         props.nonePrivatePage(false);
         props.noneEditPage(false);
+        axios
+            .get(`http://localhost:4000/api/v1/User/BringAllPublicUser`)
+            .then((res) => {
+                let id = 1;
+                res.data.publicUsersArray.forEach((element) => {
+                    element["id"] = id++;
+                    if (element.forPlanArray.length !== 0) {
+                        element["likes"] = element.forPlanArray[0].likes.length;
+                    }
+                    props.listPublicUsers(res.data.publicUsersArray);
+                });
+            });
     };
     const onClickEditPage = () => {
         props.nonePublicPage(false);

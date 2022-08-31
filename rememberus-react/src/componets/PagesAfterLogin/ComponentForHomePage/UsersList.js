@@ -2,37 +2,41 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import "./UsersList.css";
+import axios from "axios";
 
 const columns = [
     { field: "id", headerName: "ID", width: 90 },
     {
-        field: "username",
+        field: "firstName",
+        headerName: "first name",
+        width: 150,
+    },
+    {
+        field: "lastName",
+        headerName: "last Name",
+        width: 150,
+    },
+    {
+        field: "userName",
         headerName: "Username",
         width: 150,
     },
     {
-        field: "city",
-        headerName: "City",
-        width: 150,
-    },
-    {
-        field: "address",
+        field: "adress",
         headerName: "Address",
         width: 150,
     },
-];
-
-const rows = [
-    { id: 1, username: "itayt", city: "Holon", address: "Tamar10" },
-    { id: 2, username: "itayt", city: "Holon", address: "Tamar10" },
-    { id: 3, username: "itayt", city: "Holon", address: "Tamar10" },
-    { id: 4, username: "itayt", city: "Holon", address: "Tamar10" },
-    { id: 5, username: "itayt", city: "Holon", address: "Tamar10" },
-    { id: 6, username: "itayt", city: "Holon", address: "Tamar10" },
-    { id: 7, username: "itayt", city: "Holon", address: "Tamar10" },
+    {
+        field: "likes",
+        headerName: "likes",
+        width: 150,
+    },
 ];
 
 const UsersList = (props) => {
+    console.log(props.listPublicUsers);
+    const rows = props.listPublicUsers;
+
     const onRowClicked = (GridRowParams) => {
         props.onClickUser(GridRowParams.row);
     };

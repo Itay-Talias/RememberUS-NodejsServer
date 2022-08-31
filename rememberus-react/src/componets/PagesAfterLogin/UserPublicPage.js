@@ -4,6 +4,7 @@ import UsersList from "./ComponentForHomePage/UsersList.js";
 import PublicModal from "./ComponentForHomePage/PublicModal";
 
 const UserPublicPage = (props) => {
+    // console.log(props.listPublicUsers);
     const [user, setUser] = useState({});
 
     const [open, setOpen] = useState(false);
@@ -17,7 +18,10 @@ const UserPublicPage = (props) => {
     };
     return (
         <div className={props.display ? "continer" : "display-none"}>
-            <UsersList onClickUser={openModelWithUser}></UsersList>
+            <UsersList
+                onClickUser={openModelWithUser}
+                listPublicUsers={props.listPublicUsers}
+            ></UsersList>
             <PublicModal
                 open={open}
                 handelOpen={handleOpen}

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import BarMenu from "./ComponentForHomePage/BarMenu";
 
 const UserHomePage = (props) => {
+    const [listPublicUsers, setListPublicUsers] = useState([]);
     const [privatePage, setPrivatePage] = useState(true);
     const [publicPage, setPublicPage] = useState(false);
     const [editPage, setEditPage] = useState(false);
@@ -17,6 +18,7 @@ const UserHomePage = (props) => {
                 nonePrivatePage={setPrivatePage}
                 nonePublicPage={setPublicPage}
                 noneEditPage={setEditPage}
+                listPublicUsers={setListPublicUsers}
                 userInfo={props.userInfo}
             ></BarMenu>
             <UserPrivatePage
@@ -27,6 +29,7 @@ const UserHomePage = (props) => {
             <UserPublicPage
                 userInfo={props.userInfo}
                 changeUserInfo={props.changeUserInfo}
+                listPublicUsers={listPublicUsers}
                 display={publicPage}
             ></UserPublicPage>
             <UserEditPage
