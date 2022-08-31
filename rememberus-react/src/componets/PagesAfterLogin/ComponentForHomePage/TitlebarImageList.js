@@ -13,8 +13,9 @@ import "reactjs-popup/dist/index.css";
 import "./TitlebarImageList.css";
 
 const TitlebarImageList = (props) => {
+    // המערך - להדפיס את המוצרים של האובייקט
     const [furnitureImages, setfurnitureImages] = useState([]); //get the fernture array using props!!
-
+    //פונקציה בעת לחיצה על כפתור הוספת תמונה אמיתית של רהיט
     const onChangefurnitureImages = (newfurnitureImage) => {
         let temp = {
             img: newfurnitureImage[newfurnitureImage.length - 1].img,
@@ -26,15 +27,15 @@ const TitlebarImageList = (props) => {
         temp.title = "sofa"; //send requst to pythonServerRouter.get("/send_photo_to_python_server" and get furniture
         newfurnitureImage.pop();
         newfurnitureImage.push(temp);
-        // add temp furniture to array to server
+        //לשלוח את newfurnitureImage
         setfurnitureImages(newfurnitureImage);
     };
-
+    //בעת ליצה של מחיקת כל התמונות
     const RemoveAllImages = () => {
         setfurnitureImages([]);
         //remove the furniture array from the server
     };
-
+    //בעת לחיצה על הפח
     const RemoveImage = (key) => {
         let filtered = furnitureImages.filter(function (value) {
             return value.key !== key;
@@ -52,7 +53,7 @@ const TitlebarImageList = (props) => {
         });
         setfurnitureImages(newArr);
     };
-
+    //להוסיף ידני
     const updateFurnitureWithoutImage = (furnitureValue) => {
         let temp = {
             img: require(`../../../Images/furnituresImages/${furnitureValue}.jpg`),
@@ -70,7 +71,7 @@ const TitlebarImageList = (props) => {
             <ImageList className="image-list">
                 <ImageListItem key="Subheader" cols={2}>
                     <ListSubheader component="div">
-                        {furnitureImages.length} furnitures
+                        You got {furnitureImages.length} Furnitures
                     </ListSubheader>
                     {furnitureImages.map((item) => (
                         <ImageListItem key={item.img}>
