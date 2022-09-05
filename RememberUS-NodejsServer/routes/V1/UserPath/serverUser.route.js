@@ -156,3 +156,28 @@ UserRouter.post("/Dislike", async (req, res) => {
 UserRouter.get("/BringAllPublicUser", async (req, res) => {
   res.send(await LogicManager.GetAllPublicUsers());
 });
+
+UserRouter.delete(
+  "/DeleteAllFurnitureByCertainUsernameAnfFloorPlanIndex",
+  async (req, res) => {
+    res.send(
+      await LogicManager.DeleteAllFurnituresOfCertainFloorPlanIndexForExistCertainUserName(
+        req.body.userName,
+        req.body.floorPlanIndex
+      )
+    );
+  }
+);
+
+UserRouter.post(
+  "/EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername",
+  async (req, res) => {
+    res.send(
+      await LogicManager.EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername(
+        req.body.userName,
+        req.body.floorPlanIndex,
+        req.body.newFurnituresArray
+      )
+    );
+  }
+);

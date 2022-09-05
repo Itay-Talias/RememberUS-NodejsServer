@@ -35,12 +35,15 @@ class forPlanImage {
   }
 
   //Methods
-  addNewFurniture(typeName, ImageInBase64 = undefined) {
+  addNewFurniture(typeName, key, file, flag, ImageInBase64 = undefined) {
     let newFurnitureToAdd = BuildCertainFurniture(
       typeName,
-      this.furnitureArray.length
+      this.furnitureArray.length,
+      key,
+      file,
+      flag
     );
-    newFurnitureToAdd.addDescriptionPhoto(ImageInBase64);
+    newFurnitureToAdd.changeImageInBase64(ImageInBase64);
     this.furnitureArray.push(newFurnitureToAdd);
   }
 
@@ -92,43 +95,88 @@ class forPlanImage {
   }
 }
 
-function BuildCertainFurniture(typeName, furnitureIndex) {
+function BuildCertainFurniture(typeName, furnitureIndex, key, file, flag) {
   let newFurniture;
   switch (typeName) {
     case "sofa": {
-      newFurniture = new allFurnitureClass.sofa(furnitureIndex);
+      newFurniture = new allFurnitureClass.sofa(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
     case "bath": {
-      newFurniture = new allFurnitureClass.bath(furnitureIndex);
+      newFurniture = new allFurnitureClass.bath(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
     case "toilet": {
-      newFurniture = new allFurnitureClass.toilet(furnitureIndex);
+      newFurniture = new allFurnitureClass.toilet(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
     case "television": {
-      newFurniture = new allFurnitureClass.television(furnitureIndex);
+      newFurniture = new allFurnitureClass.television(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
     case "fridge": {
-      newFurniture = new allFurnitureClass.fridge(furnitureIndex);
+      newFurniture = new allFurnitureClass.fridge(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
     case "door": {
-      newFurniture = new allFurnitureClass.door(furnitureIndex);
+      newFurniture = new allFurnitureClass.door(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
     case "chair": {
-      newFurniture = new allFurnitureClass.chair(furnitureIndex);
+      newFurniture = new allFurnitureClass.chair(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
     case "table": {
-      newFurniture = new allFurnitureClass.table(furnitureIndex);
+      newFurniture = new allFurnitureClass.table(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
     case "carpet": {
-      newFurniture = new allFurnitureClass.carpet(furnitureIndex);
+      newFurniture = new allFurnitureClass.carpet(
+        furnitureIndex,
+        key,
+        file,
+        flag
+      );
       break;
     }
   }

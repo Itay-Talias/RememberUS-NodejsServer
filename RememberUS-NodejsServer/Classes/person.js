@@ -127,10 +127,19 @@ class person {
   AddNewFurnitureForCertainIndexFloorplan(
     forPlanIndex,
     typeName,
+    key,
+    file,
+    flag,
     ImageInBase64 = undefined
   ) {
     if (forPlanIndex <= this.forPlanArray.length - 1 && forPlanIndex >= 0) {
-      this.forPlanArray[forPlanIndex].addNewFurniture(typeName, ImageInBase64);
+      this.forPlanArray[forPlanIndex].addNewFurniture(
+        typeName,
+        key,
+        file,
+        flag,
+        ImageInBase64
+      );
       return true;
     }
     return false;
@@ -143,6 +152,14 @@ class person {
     if (floorPlanIndex <= this.forPlanArray.length - 1 && floorPlanIndex >= 0) {
       const floorPlan = this.forPlanArray[floorPlanIndex];
       return floorPlan.DeleteFurnitureByIndex(furnitureIndex);
+    }
+    return false;
+  }
+
+  DeleteAllFurnitureOfCertainFloorPlanIndex(floorPlanIndex) {
+    if (floorPlanIndex <= this.forPlanArray.length - 1 && floorPlanIndex >= 0) {
+      this.forPlanArray[floorPlanIndex].changeFurnitureArray([]);
+      return true;
     }
     return false;
   }

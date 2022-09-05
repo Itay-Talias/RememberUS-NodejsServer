@@ -1,10 +1,13 @@
 "use strict";
 
 class furniture {
-  constructor(typeName, furnitureIndex) {
+  constructor(typeName, furnitureIndex, key, file, flag) {
     this.furnitureIndex = furnitureIndex;
     this.imageInBase64 = undefined;
     this.typeName = typeName;
+    this.key = key;
+    this.file = file;
+    this.flag = flag;
   }
   // Getter
   get ImageInBase64() {
@@ -15,6 +18,15 @@ class furniture {
   }
   get FurnitureIndex() {
     return this.furnitureIndex;
+  }
+  get Key() {
+    return this.key;
+  }
+  get File() {
+    return this.file;
+  }
+  get Flag() {
+    return this.flag;
   }
 
   // Setters
@@ -27,10 +39,14 @@ class furniture {
   changeFurnitureIndex(newIndex) {
     this.furnitureIndex = newIndex;
   }
-
-  //Methods
-  addDescriptionPhoto(ImageInBase64) {
-    this.imageInBase64 = ImageInBase64;
+  changeKey(newKey) {
+    this.key = newKey;
+  }
+  changeFile(newFile) {
+    this.file = newFile;
+  }
+  changeFlag(newFlag) {
+    this.flag = newFlag;
   }
 }
 

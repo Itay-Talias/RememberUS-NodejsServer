@@ -2,56 +2,56 @@
 const furnitureClass = require("./furniture.js");
 
 class sofa extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("sofa", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("sofa", furnitureIndex, key, file, flag);
   }
 }
 
 class bath extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("bath", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("bath", furnitureIndex, key, file, flag);
   }
 }
 
 class toilet extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("toilet", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("toilet", furnitureIndex, key, file, flag);
   }
 }
 
 class television extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("television", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("television", furnitureIndex, key, file, flag);
   }
 }
 
 class fridge extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("fridge", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("fridge", furnitureIndex, key, file, flag);
   }
 }
 
 class door extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("door", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("door", furnitureIndex, key, file, flag);
   }
 }
 
 class chair extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("chair", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("chair", furnitureIndex, key, file, flag);
   }
 }
 
 class table extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("table", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("table", furnitureIndex, key, file, flag);
   }
 }
 
 class carpet extends furnitureClass.furnitureClass {
-  constructor(furnitureIndex) {
-    super("carpet", furnitureIndex);
+  constructor(furnitureIndex, key, file, flag) {
+    super("carpet", furnitureIndex, key, file, flag);
   }
 }
 
