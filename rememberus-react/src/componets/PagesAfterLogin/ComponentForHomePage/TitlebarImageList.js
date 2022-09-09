@@ -28,33 +28,48 @@ const TitlebarImageList = (props) => {
       typeName: undefined,
       flag: true,
     };
+    console.log(temp.imageInBase64);
     axios
       .post(`http://localhost:4000/api/v1/python/send_photo_to_python_server`, {
         base64: temp.imageInBase64,
       })
       .then((res) => {
-        temp.typeName = res.data;
+        temp.typeName = res.data.type;
+        newfurnitureImage.pop();
+        newfurnitureImage.push(temp);
+        axios
+          .post(
+            `http://localhost:4000/api/v1/User/EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername`,
+            {
+              userName: props.userInfo.userName,
+              floorPlanIndex: 0,
+              newFurnituresArray: newfurnitureImage,
+            }
+          )
+          .then((res) => {
+            props.changeUserInfo(res.data.userInfo);
+            setfurnitureImages(newfurnitureImage);
+          });
       });
 
-    //temp.typeName = "sofa"; //send requst to pythonServerRouter.get("/send_photo_to_python_server" and get furniture
-    newfurnitureImage.pop();
-    newfurnitureImage.push(temp);
+    // temp.typeName = "sofa"; //send requst to pythonServerRouter.get("/send_photo_to_python_server" and get furniture
+
     //לשלוח את newfurnitureImage
-    axios
-      .post(
-        `http://localhost:4000/api/v1/User/EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername`,
-        {
-          userName: props.userInfo.userName,
-          floorPlanIndex: 0,
-          newFurnituresArray: newfurnitureImage,
-        }
-      )
-      .then((res) => {
-        if (res.data.Status === "Delete furniture succssed") {
-          props.changeUserInfo(res.data.userInfo);
-          setfurnitureImages(newfurnitureImage);
-        }
-      });
+
+    // axios
+    //   .post(
+    //     `http://localhost:4000/api/v1/User/EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername`,
+    //     {
+    //       userName: props.userInfo.userName,
+    //       floorPlanIndex: 0,
+    //       newFurnituresArray: newfurnitureImage,
+    //     }
+    //   )
+    //   .then((res) => {
+    //     if (res.data.Status === "Delete furniture succssed") {
+    //       props.changeUserInfo(res.data.userInfo);
+    //     }
+    //   });
   };
 
   const RemoveAllImages = () => {

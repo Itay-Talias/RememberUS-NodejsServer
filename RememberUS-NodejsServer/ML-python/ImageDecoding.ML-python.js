@@ -22,16 +22,12 @@ async function sendImageDecode(pathString) {
   return furnitureString;
 }
 
-function sendBase64Decode(base64String) {
-  axios
-    .post("http://localhost:5000/image", { Base64_image: base64String })
-    .then((response) => {
-      console.log(response.data);
-      return response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+async function sendBase64Decode(base64String) {
+  const response = await axios.post("http://localhost:5000/image", {
+    Base64_image: base64String.slice(23),
+  });
+  console.log(`1:${response.data}`);
+  return response.data;
 }
 
 module.exports = {

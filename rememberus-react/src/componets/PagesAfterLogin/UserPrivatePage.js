@@ -6,29 +6,33 @@ import { Button } from "@mui/material";
 import ImageUploading from "react-images-uploading";
 import TitlebarImageList from "./ComponentForHomePage/TitlebarImageList";
 import axios from "axios";
-// import { UserContext } from "../../App.js";
 
 const UserPrivatePage = (props) => {
-  // const user = useContext(UserContext);
-  // console.log(user);
   const [floorPlanImage, setFloorPlanImage] = useState(
     props?.userInfo?.forPlanArray[0]?.forPlanImangeBase64 || []
   );
 
-  const onChangeFoorPlan = (newFloorPlanImage) => {
-    setFloorPlanImage(newFloorPlanImage); //Show floorPlan
+  const onChangeFoorPlan = async (newFloorPlanImage) => {
     if (newFloorPlanImage.length !== 0) {
-      axios.post(`http://localhost:4000/api/v1/User/AddNewForPlanImage`, {
-        userName: props.userInfo.userName,
-        forPlanImageInBase64: newFloorPlanImage,
-      });
+      const res = await axios.post(
+        `http://localhost:4000/api/v1/User/AddNewForPlanImage`,
+        {
+          userName: props.userInfo.userName,
+          forPlanImageInBase64: newFloorPlanImage,
+        }
+      );
+      props.changeUserInfo(res.data.info);
     } else {
-      console.log("hiii");
-      axios.post(`http://localhost:4000/api/v1/User/DeleteForPlanByIndex`, {
-        userName: props.userInfo.userName,
-        forPlanIndex: 0,
-      });
+      const res = await axios.post(
+        `http://localhost:4000/api/v1/User/DeleteForPlanByIndex`,
+        {
+          userName: props.userInfo.userName,
+          forPlanIndex: 0,
+        }
+      );
+      props.changeUserInfo(res.data.info);
     }
+    setFloorPlanImage(newFloorPlanImage); //Show floorPlan
   };
 
   return (
