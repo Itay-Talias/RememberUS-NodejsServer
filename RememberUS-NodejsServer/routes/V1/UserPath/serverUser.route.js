@@ -157,7 +157,7 @@ UserRouter.get("/BringAllPublicUser", async (req, res) => {
   res.send(await LogicManager.GetAllPublicUsers());
 });
 
-UserRouter.delete(
+UserRouter.post(
   "/DeleteAllFurnitureByCertainUsernameAnfFloorPlanIndex",
   async (req, res) => {
     res.send(

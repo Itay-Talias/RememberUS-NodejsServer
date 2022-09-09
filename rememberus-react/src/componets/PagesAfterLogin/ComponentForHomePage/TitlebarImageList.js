@@ -14,13 +14,12 @@ import "./TitlebarImageList.css";
 import axios from "axios";
 
 const TitlebarImageList = (props) => {
-  // המערך - להדפיס את המוצרים של האובייקט
-  //console.log(props.userInfo.forPlanArray[0].furnitureArray);
   const [furnitureImages, setfurnitureImages] = useState(
     props?.userInfo?.forPlanArray[0]?.furnitureArray || []
-  ); //get the fernture array using props!!
+  );
   //פונקציה בעת לחיצה על כפתור הוספת תמונה אמיתית של רהיט
   const onChangefurnitureImages = (newfurnitureImage) => {
+    //newfurnitureImage is array of the new furnitures array to send to the server
     let temp = {
       imageInBase64:
         newfurnitureImage[newfurnitureImage.length - 1].imageInBase64,
@@ -29,17 +28,39 @@ const TitlebarImageList = (props) => {
       typeName: undefined,
       flag: true,
     };
-    temp.typeName = "sofa"; //send requst to pythonServerRouter.get("/send_photo_to_python_server" and get furniture
+    axios
+      .post(`http://localhost:4000/api/v1/python/send_photo_to_python_server`, {
+        base64: temp.imageInBase64,
+      })
+      .then((res) => {
+        temp.typeName = res.data;
+      });
+
+    //temp.typeName = "sofa"; //send requst to pythonServerRouter.get("/send_photo_to_python_server" and get furniture
     newfurnitureImage.pop();
     newfurnitureImage.push(temp);
     //לשלוח את newfurnitureImage
-    setfurnitureImages(newfurnitureImage);
+    axios
+      .post(
+        `http://localhost:4000/api/v1/User/EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername`,
+        {
+          userName: props.userInfo.userName,
+          floorPlanIndex: 0,
+          newFurnituresArray: newfurnitureImage,
+        }
+      )
+      .then((res) => {
+        if (res.data.Status === "Delete furniture succssed") {
+          props.changeUserInfo(res.data.userInfo);
+          setfurnitureImages(newfurnitureImage);
+        }
+      });
   };
 
   const RemoveAllImages = () => {
     //remove the furniture array from the server
     axios
-      .delete(
+      .post(
         `http://localhost:4000/api/v1/User/DeleteAllFurnitureByCertainUsernameAnfFloorPlanIndex`,
         {
           userName: props.userInfo.userName,
@@ -47,8 +68,8 @@ const TitlebarImageList = (props) => {
         }
       )
       .then((res) => {
-        if (res.Status === "Delete all furniture succssed") {
-          props.changeUserInfo(res.userInfo);
+        if (res.data.Status === "Delete all furniture succssed") {
+          props.changeUserInfo(res.data.userInfo);
           setfurnitureImages([]);
         }
       });
@@ -69,9 +90,8 @@ const TitlebarImageList = (props) => {
         }
       )
       .then((res) => {
-        console.log("hi");
-        if (res.Status === "Delete furniture succssed") {
-          props.changeUserInfo(res.userInfo);
+        if (res.data.Status === "Delete furniture succssed") {
+          props.changeUserInfo(res.data.userInfo);
           setfurnitureImages(filtered);
         }
       });
@@ -96,7 +116,7 @@ const TitlebarImageList = (props) => {
       flag: false,
     };
     const newfurnitureArr = [...furnitureImages, temp];
-    setfurnitureImages(newfurnitureArr);
+
     axios
       .post(
         `http://localhost:4000/api/v1/User/EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername`,
@@ -107,9 +127,8 @@ const TitlebarImageList = (props) => {
         }
       )
       .then((res) => {
-        if (res.Status === "Delete furniture succssed") {
-          console.log("hfgdhgd");
-          props.changeUserInfo(res.userInfo);
+        if (res.data.Status === "Delete furniture succssed") {
+          props.changeUserInfo(res.data.userInfo);
           setfurnitureImages(newfurnitureArr);
         }
       });

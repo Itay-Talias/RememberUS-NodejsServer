@@ -736,8 +736,11 @@ async function DeleteAllFurnituresOfCertainFloorPlanIndexForExistCertainUserName
   floorPlanIndex
 ) {
   let user = await MongoDBManager.IsuserNameExist(userName);
+  console.log(user);
   await MongoDBManager.DeleteExistPersonFromDB(userName);
+
   const updatedPerson = createPersonFromDBDocument(user);
+
   const DeleteSuccssed =
     updatedPerson.DeleteAllFurnitureOfCertainFloorPlanIndex(floorPlanIndex);
   await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
@@ -758,6 +761,7 @@ async function EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername(
   newFurnituresArray
 ) {
   let user = await MongoDBManager.IsuserNameExist(userName);
+  console.log(user);
   await MongoDBManager.DeleteExistPersonFromDB(userName);
   const updatedPerson = createPersonFromDBDocument(user);
   if (
