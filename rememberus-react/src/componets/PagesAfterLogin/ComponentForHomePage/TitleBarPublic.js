@@ -18,11 +18,7 @@ const TitleBarPublic = (props) => {
         </ListSubheader>
         {furnitureImages.map((item) => (
           <ImageListItem key={item.img}>
-            <img
-              src={require(`../../../Images/furnituresImages/${item.typeName}.jpg`)}
-              alt={item.typeName}
-              loading="lazy"
-            />
+            <img src={item.imageInBase64} alt={item.typeName} loading="lazy" />
           </ImageListItem>
         ))}
       </ImageListItem>
