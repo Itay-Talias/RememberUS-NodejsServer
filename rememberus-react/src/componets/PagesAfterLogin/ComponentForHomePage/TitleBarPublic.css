@@ -3,7 +3,7 @@
     width: 25%;
     display: inline-block !important;
     height: 600px;
-    left: 75%;
+    left: 45%;
 }
 
 .image-model {
@@ -14,6 +14,5 @@
 @media (max-width: 1400px) {
     .image-list-public {
         height: 400px;
-        left: 75%;
-    }
+        left: 45%;    }
 }

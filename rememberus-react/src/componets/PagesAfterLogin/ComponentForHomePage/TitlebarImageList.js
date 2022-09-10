@@ -19,38 +19,45 @@ const TitlebarImageList = (props) => {
   );
   //פונקציה בעת לחיצה על כפתור הוספת תמונה אמיתית של רהיט
   const onChangefurnitureImages = (newfurnitureImage) => {
-    //newfurnitureImage is array of the new furnitures array to send to the server
-    let temp = {
-      imageInBase64:
-        newfurnitureImage[newfurnitureImage.length - 1].imageInBase64,
-      key: furnitureImages.length + 1,
-      file: newfurnitureImage[newfurnitureImage.length - 1].file,
-      typeName: undefined,
-      flag: true,
-    };
-    console.log(temp.imageInBase64);
-    axios
-      .post(`http://localhost:4000/api/v1/python/send_photo_to_python_server`, {
-        base64: temp.imageInBase64,
-      })
-      .then((res) => {
-        temp.typeName = res.data.type;
-        newfurnitureImage.pop();
-        newfurnitureImage.push(temp);
-        axios
-          .post(
-            `http://localhost:4000/api/v1/User/EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername`,
-            {
-              userName: props.userInfo.userName,
-              floorPlanIndex: 0,
-              newFurnituresArray: newfurnitureImage,
-            }
-          )
-          .then((res) => {
-            props.changeUserInfo(res.data.userInfo);
-            setfurnitureImages(newfurnitureImage);
-          });
-      });
+    if (props?.userInfo?.forPlanArray.length !== 0) {
+      //newfurnitureImage is array of the new furnitures array to send to the server
+      let temp = {
+        imageInBase64:
+          newfurnitureImage[newfurnitureImage.length - 1].imageInBase64,
+        key: furnitureImages.length + 1,
+        file: newfurnitureImage[newfurnitureImage.length - 1].file,
+        typeName: undefined,
+        flag: true,
+      };
+      console.log(temp.imageInBase64);
+      axios
+        .post(
+          `http://localhost:4000/api/v1/python/send_photo_to_python_server`,
+          {
+            base64: temp.imageInBase64,
+          }
+        )
+        .then((res) => {
+          temp.typeName = res.data.type;
+          newfurnitureImage.pop();
+          newfurnitureImage.push(temp);
+          axios
+            .post(
+              `http://localhost:4000/api/v1/User/EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername`,
+              {
+                userName: props.userInfo.userName,
+                floorPlanIndex: 0,
+                newFurnituresArray: newfurnitureImage,
+              }
+            )
+            .then((res) => {
+              props.changeUserInfo(res.data.userInfo);
+              setfurnitureImages(newfurnitureImage);
+            });
+        });
+    } else {
+      alert("First of all, you need to upload a floorplan");
+    }
 
     // temp.typeName = "sofa"; //send requst to pythonServerRouter.get("/send_photo_to_python_server" and get furniture
 

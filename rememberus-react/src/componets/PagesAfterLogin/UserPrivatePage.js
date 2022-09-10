@@ -22,7 +22,8 @@ const UserPrivatePage = (props) => {
         }
       );
       props.changeUserInfo(res.data.info);
-    } else {
+      setFloorPlanImage(newFloorPlanImage); //Show floorPlan
+    } else if (props.userInfo.forPlanArray[0].furnitureArray.length === 0) {
       const res = await axios.post(
         `http://localhost:4000/api/v1/User/DeleteForPlanByIndex`,
         {
@@ -31,8 +32,10 @@ const UserPrivatePage = (props) => {
         }
       );
       props.changeUserInfo(res.data.info);
+      setFloorPlanImage(newFloorPlanImage); //Show floorPlan
+    } else {
+      alert("First of all, please delete your floorplan");
     }
-    setFloorPlanImage(newFloorPlanImage); //Show floorPlan
   };
 
   return (
