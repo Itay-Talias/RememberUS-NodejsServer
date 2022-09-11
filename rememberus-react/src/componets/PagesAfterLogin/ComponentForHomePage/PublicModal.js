@@ -4,6 +4,7 @@ import Modal from "@mui/material/Modal";
 import "./PublicModal.css";
 import TitleBarPublic from "./TitleBarPublic";
 import LikeAndComment from "./LikeAndComment";
+import TitleBarComment from "./TitleBarComment";
 
 const PublicModal = (props) => {
   let srcPhoto =
@@ -21,6 +22,7 @@ const PublicModal = (props) => {
             user={props.user}
             userInfo={props.userInfo}
           ></LikeAndComment>
+          <TitleBarComment className="comments-models"></TitleBarComment>
           <TitleBarPublic
             className="bar-model"
             userInfo={props.user}

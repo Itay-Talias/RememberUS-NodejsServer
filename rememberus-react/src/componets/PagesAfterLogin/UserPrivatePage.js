@@ -34,7 +34,7 @@ const UserPrivatePage = (props) => {
       props.changeUserInfo(res.data.info);
       setFloorPlanImage(newFloorPlanImage); //Show floorPlan
     } else {
-      alert("First of all, please delete your floorplan");
+      alert("First of all, please delete your all your furnitures");
     }
   };
 

@@ -1,0 +1,7 @@
+.comment-bar{
+  display: inline-block;
+  margin: 0;
+  position: relative;
+  left: 10%;
+  width: 200px;
+}
