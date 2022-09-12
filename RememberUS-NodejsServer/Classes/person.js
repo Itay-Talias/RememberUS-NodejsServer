@@ -182,10 +182,43 @@ class person {
     return false;
   }
   LikeFloorPlanByIndex(userName, index) {
-    return this.forPlanArray[index].LikeFloorPlan(userName);
+    //floorplanIndex is valid
+    if (index >= 0 && index <= this.forPlanArray.length - 1) {
+      //liked succssed->that userName didnt liked that person floorplan already
+      if (this.forPlanArray[index].LikeFloorPlan(userName) === true) {
+        return true;
+      }
+      //liked failed->that userName already liked that person floorplan already
+      else {
+        return false;
+      }
+    }
+    return false;
   }
   DisLikeFloorPlanByIndex(userName, index) {
-    return this.forPlanArray[index].DislikeFloorPlan(userName);
+    //floorplanIndex is valid
+    if (index >= 0 && index <= this.forPlanArray.length - 1) {
+      //Dislike succssed->that userName liked that person floorplan
+      if (this.forPlanArray[index].DislikeFloorPlan(userName) === true) {
+        return true;
+      }
+      //liked failed->that userName already liked that person floorplan already
+      else {
+        return false;
+      }
+    }
+    return false;
+  }
+  CommentOnFloorPlanByIndex(theUsernameWhoComment, commentToAdd, index) {
+    //floorplanIndex is valid
+    if (index >= 0 && index <= this.forPlanArray.length - 1) {
+      this.forPlanArray[index].CommentOnFloorPlan(
+        theUsernameWhoComment,
+        commentToAdd
+      );
+      return true;
+    }
+    return false;
   }
 }
 

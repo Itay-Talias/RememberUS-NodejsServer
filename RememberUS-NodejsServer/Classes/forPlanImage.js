@@ -7,6 +7,7 @@ class forPlanImage {
     this.forPlanImangeBase64 = forPlanImangeBase64;
     this.furnitureArray = [];
     this.likes = [];
+    this.comments = [];
   }
 
   //Getters
@@ -92,6 +93,12 @@ class forPlanImage {
       }
     }
     return false;
+  }
+  CommentOnFloorPlan(theUserNameWhoComment, theComment) {
+    this.comments.push({
+      theUserNameWhoComment: theUserNameWhoComment,
+      theComment: theComment,
+    });
   }
 }
 

@@ -36,6 +36,7 @@ function createPersonFromDBDocument(Document) {
   let index = 0;
   for (const currentForPlan of Document.forPlanArray) {
     updatedUser.AddNewForPlan(currentForPlan.forPlanImangeBase64);
+    //build that furniture array for that floorplan
     for (const currentFurnitre of currentForPlan.furnitureArray) {
       updatedUser.AddNewFurnitureForCertainIndexFloorplan(
         index,
@@ -46,9 +47,17 @@ function createPersonFromDBDocument(Document) {
         currentFurnitre.imageInBase64
       );
     }
-    //console.log(currentForPlan.likes.length);
+    //build the likes array for that floorplam
     for (let i = 0; i < currentForPlan.likes.length; i++) {
       updatedUser.LikeFloorPlanByIndex(currentForPlan.likes[i], index);
+    }
+    //build the comment array for that floorplan theUsernameWhoComment, commentToAdd, index
+    for (let i = 0; i < currentForPlan.comments.length; i++) {
+      updatedUser.CommentOnFloorPlanByIndex(
+        currentForPlan.comments[i].theUserNameWhoComment,
+        currentForPlan.comments[i].theComment,
+        index
+      );
     }
     index++;
   }
@@ -659,65 +668,146 @@ async function getPersonDocumentByHisPrivacy(userName) {
   }
 }
 
-async function LikeFloorPlanByUserName(userName, index) {
-  if (!userName) {
+async function LikeFloorPlanByUserName(
+  userNameThatAskToLike,
+  userNameThatWeWantToLike,
+  floorPlanIndex
+) {
+  if (!userNameThatAskToLike) {
     return {
       Status: "Like Failed",
-      Reason: "Missing input, userName",
+      Reason: "Missing input, userNameThatAskToLike",
     };
   }
-  if (!index) {
+  if (!userNameThatWeWantToLike) {
     return {
       Status: "Like Failed",
-      Reason: "Missing input, index",
+      Reason: "Missing input, userNameThatWeWantToLike",
+    };
+  }
+  if (floorPlanIndex === undefined) {
+    return {
+      Status: "Like Failed",
+      Reason: "Missing input, floorPlanIndex",
     };
   }
 
-  let user = await MongoDBManager.IsuserNameExist(userName);
-  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  let user = await MongoDBManager.IsuserNameExist(userNameThatWeWantToLike);
+  await MongoDBManager.DeleteExistPersonFromDB(userNameThatWeWantToLike);
   const updatedPerson = createPersonFromDBDocument(user);
-  const LikeSuccssed = updatedPerson.LikeFloorPlanByIndex(userName, index);
+  const LikeSuccssed = updatedPerson.LikeFloorPlanByIndex(
+    userNameThatAskToLike,
+    floorPlanIndex
+  );
   await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
 
   if (LikeSuccssed) {
-    return { Status: "Like succssed", personInfo: updatedPerson };
+    return { Status: "Like succssed", personWhoGotLikeInfo: updatedPerson };
   } else {
     return {
       Status: "Like Failed",
-      Reason: "userName already liked that flooplan",
+      Reason:
+        "userName already liked that flooplan or no floorPlan in that with that index",
     };
   }
 }
 
-async function DislikeFloorPlanByUserName(userName, index) {
-  if (!userName) {
+async function DislikeFloorPlanByUserName(
+  userNameThatAskToDislike,
+  userNameThatWeWantToDislike,
+  floorPlanIndex
+) {
+  if (!userNameThatAskToDislike) {
     return {
       Status: "Like Failed",
-      Reason: "Missing input, userName",
+      Reason: "Missing input, userNameThatAskToDislike",
     };
   }
-  if (!index) {
+  if (!userNameThatWeWantToDislike) {
     return {
       Status: "Like Failed",
-      Reason: "Missing input, index",
+      Reason: "Missing input, userNameThatWeWantToDislike",
+    };
+  }
+  if (floorPlanIndex === undefined) {
+    return {
+      Status: "Like Failed",
+      Reason: "Missing input, floorPlanIndex",
     };
   }
 
-  let user = await MongoDBManager.IsuserNameExist(userName);
-  await MongoDBManager.DeleteExistPersonFromDB(userName);
+  let user = await MongoDBManager.IsuserNameExist(userNameThatWeWantToDislike);
+  await MongoDBManager.DeleteExistPersonFromDB(userNameThatWeWantToDislike);
   const updatedPerson = createPersonFromDBDocument(user);
   const DislikeSuccssed = updatedPerson.DisLikeFloorPlanByIndex(
-    userName,
-    index
+    userNameThatAskToDislike,
+    floorPlanIndex
   );
   await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
 
   if (DislikeSuccssed) {
-    return { Status: "Dislike succssed", personInfo: updatedPerson };
+    return {
+      Status: "Dislike succssed",
+      personWhoGotDislikeInfo: updatedPerson,
+    };
   } else {
     return {
       Status: "Dislike Failed",
-      Reason: "userName hasnt like the photo",
+      Reason:
+        "userName already Dislike that flooplan or no floorPlan in that with that index",
+    };
+  }
+}
+
+async function CommentFloorPlanByUserName(
+  userNameThatAskToComment,
+  theComment,
+  userNameThatWeWantToComment,
+  floorPlanIndex
+) {
+  if (!userNameThatAskToComment) {
+    return {
+      Status: "Comment Failed",
+      Reason: "Missing input, userNameThatAskToComment",
+    };
+  }
+  if (theComment === undefined) {
+    return {
+      Status: "Comment Failed",
+      Reason: "Missing input, theComment",
+    };
+  }
+  if (!userNameThatWeWantToComment) {
+    return {
+      Status: "Comment Failed",
+      Reason: "Missing input, userNameThatWeWantToComment",
+    };
+  }
+  if (floorPlanIndex === undefined) {
+    return {
+      Status: "Comment Failed",
+      Reason: "Missing input, floorPlanIndex",
+    };
+  }
+  let user = await MongoDBManager.IsuserNameExist(userNameThatWeWantToComment);
+  await MongoDBManager.DeleteExistPersonFromDB(userNameThatWeWantToComment);
+  const updatedPerson = createPersonFromDBDocument(user);
+  const CommentSuccssed = updatedPerson.CommentOnFloorPlanByIndex(
+    userNameThatAskToComment,
+    theComment,
+    floorPlanIndex
+  );
+  await MongoDBManager.CreateNewPersonInDataBase(updatedPerson);
+
+  if (CommentSuccssed) {
+    return {
+      Status: "Comment succssed",
+      personWhoGotNewComment: updatedPerson,
+    };
+  } else {
+    return {
+      Status: "Comment Failed",
+      Reason: "no floorPlan in that with that index",
     };
   }
 }
@@ -809,4 +899,5 @@ module.exports = {
     DeleteAllFurnituresOfCertainFloorPlanIndexForExistCertainUserName,
   EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername:
     EditFurnitureArrayOfCertainFloorPlanIndexOfExistUsername,
+  CommentFloorPlanByUserName: CommentFloorPlanByUserName,
 };
