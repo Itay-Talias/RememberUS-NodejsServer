@@ -132,13 +132,13 @@ const LikeAndComment = (props) => {
 
   //when comment button clicked
   const CommentClick = () => {
-    // props.changeComments([
-    //   ...props.comments,
-    //   {
-    //     theUserNameWhoComment: props.userInfo.userName,
-    //     theComment: enterdComment,
-    //   },
-    // ]);
+    props.changeComments([
+      ...props.comments,
+      {
+        theUserNameWhoComment: props.userInfo.userName,
+        theComment: enterdComment,
+      },
+    ]);
     setEnterdComment("");
     axios
       .post(`http://localhost:4000/api/v1/User/Comment`, {
@@ -174,7 +174,7 @@ const LikeAndComment = (props) => {
   return (
     <div className="continerOfLikeAndComment">
       <h4 className="title-like">
-        {`${props.user.firstName} ${props.user.lastName} have ${amountOfLikes} likes`}
+        {`${props.user.firstName} ${props.user.lastName} has ${amountOfLikes} likes`}
       </h4>
       <Button className="like-button" onClick={LikeClick}>
         <span className="likes-counter">{likeClicked ? `unlike` : `like`}</span>

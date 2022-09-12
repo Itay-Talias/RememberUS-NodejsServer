@@ -6,8 +6,8 @@
     background-color: rgba(220, 221, 225, 0.9);
     padding: 30px;
     position: absolute;
-    top: 0;
-    left: 30%;
+    top: 10%;
+    left: 35%;
     width: 500px;
     height: 550px;
     border-radius: 50px;
@@ -29,4 +29,11 @@
 .Logo {
     padding: 10px;
     border-radius: 20px;
+}
+
+@media (max-width: 1400px) {
+    .form-SignUp {
+        top: 0;
+        left: 30%;
+    }
 }
