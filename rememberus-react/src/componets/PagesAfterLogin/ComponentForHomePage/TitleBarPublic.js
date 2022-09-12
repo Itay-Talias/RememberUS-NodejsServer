@@ -5,7 +5,6 @@ import ListSubheader from "@mui/material/ListSubheader";
 import "./TitleBarPublic.css";
 
 const TitleBarPublic = (props) => {
-  console.log(props.userInfo);
   const [furnitureImages, setfurnitureImages] = useState(
     props?.userInfo?.forPlanArray[0]?.furnitureArray || []
   );

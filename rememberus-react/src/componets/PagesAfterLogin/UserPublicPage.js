@@ -4,6 +4,7 @@ import UsersList from "./ComponentForHomePage/UsersList.js";
 import PublicModal from "./ComponentForHomePage/PublicModal";
 
 const UserPublicPage = (props) => {
+  const [commentArray, setCommentArray] = useState([]);
   const [user, setUser] = useState({});
 
   const [open, setOpen] = useState(false);
@@ -14,6 +15,7 @@ const UserPublicPage = (props) => {
     if (userFromList.forPlanArray.length !== 0) {
       handleOpen();
       setUser(userFromList);
+      setCommentArray(userFromList.forPlanArray[0].comments);
     } else {
       alert("You chose a user who did not upload a floorplan");
     }
@@ -32,6 +34,8 @@ const UserPublicPage = (props) => {
         userInfo={props.userInfo}
         changeUser={setUser}
         changelistPubliUsers={props.changelistPubliUsers}
+        setComment={setCommentArray}
+        comments={commentArray}
       ></PublicModal>
     </div>
   );

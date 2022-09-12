@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import "./PublicModal.css";
@@ -13,6 +13,7 @@ const PublicModal = (props) => {
       : props.user.forPlanArray.length === 0
       ? " "
       : props.user.forPlanArray[0].forPlanImangeBase64[0].data_url;
+
   return (
     <div>
       <Modal open={props.open} onClose={props.handleClose}>
@@ -23,8 +24,14 @@ const PublicModal = (props) => {
             userInfo={props.userInfo}
             changeUser={props.changeUser}
             changelistPubliUsers={props.changelistPubliUsers}
+            changeComments={props.setComment}
+            comments={props.comments}
           ></LikeAndComment>
-          <TitleBarComment className="comments-models"></TitleBarComment>
+          <TitleBarComment
+            className="comments-models"
+            userInfo={props.user}
+            comments={props.comments}
+          ></TitleBarComment>
           <TitleBarPublic
             className="bar-model"
             userInfo={props.user}

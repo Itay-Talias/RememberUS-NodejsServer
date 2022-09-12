@@ -132,6 +132,14 @@ const LikeAndComment = (props) => {
 
   //when comment button clicked
   const CommentClick = () => {
+    // props.changeComments([
+    //   ...props.comments,
+    //   {
+    //     theUserNameWhoComment: props.userInfo.userName,
+    //     theComment: enterdComment,
+    //   },
+    // ]);
+    setEnterdComment("");
     axios
       .post(`http://localhost:4000/api/v1/User/Comment`, {
         userNameThatAskToComment: props.userInfo.userName,
@@ -143,7 +151,7 @@ const LikeAndComment = (props) => {
         if (res.data.Status === "Comment succssed") {
           alert("Comment Succssed");
           //set current comment to ""
-          setEnterdComment("");
+
           //in order to set new Clicked user beacuse we add like to his likes array so we want the userPublicPage component to reload
           props.changeUser(res.data.personWhoGotNewComment);
           //set publicuser array in order to reload component of userHomePage with the new publicUserList to show the new amount of like in the userPublicPage
@@ -162,11 +170,6 @@ const LikeAndComment = (props) => {
         }
       });
   };
-
-  //init the comment array of clicked user
-  const [commentArr, setCommentArr] = useState(
-    props?.user?.forPlanArray[0]?.comments || ""
-  );
 
   return (
     <div className="continerOfLikeAndComment">

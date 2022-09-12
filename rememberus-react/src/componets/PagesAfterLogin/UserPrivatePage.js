@@ -11,7 +11,7 @@ const UserPrivatePage = (props) => {
   const [floorPlanImage, setFloorPlanImage] = useState(
     props?.userInfo?.forPlanArray[0]?.forPlanImangeBase64 || []
   );
-
+  console.log(props);
   const onChangeFoorPlan = async (newFloorPlanImage) => {
     if (newFloorPlanImage.length !== 0) {
       const res = await axios.post(
