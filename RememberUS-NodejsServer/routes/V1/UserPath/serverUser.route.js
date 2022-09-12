@@ -138,7 +138,8 @@ UserRouter.post("/GiveAnotherPersonDocumentByHisPrivacy", async (req, res) => {
 UserRouter.post("/Like", async (req, res) => {
   res.send(
     await LogicManager.LikeFloorPlanByUserName(
-      req.body.userName,
+      req.body.userNameThatAskToLike,
+      req.body.userNameThatWeWantToLike,
       req.body.floorPlanIndex
     )
   );
@@ -147,7 +148,19 @@ UserRouter.post("/Like", async (req, res) => {
 UserRouter.post("/Dislike", async (req, res) => {
   res.send(
     await LogicManager.DislikeFloorPlanByUserName(
-      req.body.userName,
+      req.body.userNameThatAskToDislike,
+      req.body.userNameThatWeWantToDislike,
+      req.body.floorPlanIndex
+    )
+  );
+});
+
+UserRouter.post("/Comment", async (req, res) => {
+  res.send(
+    await LogicManager.CommentFloorPlanByUserName(
+      req.body.userNameThatAskToComment,
+      req.body.theComment,
+      req.body.userNameThatWeWantToComment,
       req.body.floorPlanIndex
     )
   );

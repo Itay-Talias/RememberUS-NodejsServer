@@ -21,6 +21,8 @@ const PublicModal = (props) => {
           <LikeAndComment
             user={props.user}
             userInfo={props.userInfo}
+            changeUser={props.changeUser}
+            changelistPubliUsers={props.changelistPubliUsers}
           ></LikeAndComment>
           <TitleBarComment className="comments-models"></TitleBarComment>
           <TitleBarPublic

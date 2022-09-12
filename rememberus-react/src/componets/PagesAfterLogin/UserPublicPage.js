@@ -30,6 +30,8 @@ const UserPublicPage = (props) => {
         handleClose={handleClose}
         user={user}
         userInfo={props.userInfo}
+        changeUser={setUser}
+        changelistPubliUsers={props.changelistPubliUsers}
       ></PublicModal>
     </div>
   );
